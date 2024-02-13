@@ -6,6 +6,8 @@ import java.util.*;
 
 public class MainInterface extends JFrame {
 
+    private ArrayList<Particle> particles = new ArrayList<Particle>();
+
     //WINDOW SIZE
     private int WINDOW_WIDTH = 1580;
     private int WINDOW_HEIGHT = 720;
@@ -70,6 +72,11 @@ public class MainInterface extends JFrame {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
+
+                // Draw particles
+                for (Particle particle : particles){
+                    particle.draw(g);
+                }
 
 
                 fps_label.setBounds(1220, 0, 100, 20);
@@ -179,9 +186,55 @@ public class MainInterface extends JFrame {
 
             INPUT_FRAME.add(wallSpec, BorderLayout.SOUTH);
 
-        // Add input frame to the main frame
         add(INPUT_FRAME, BorderLayout.EAST);
         setVisible(true);
+
+
+        // ACTION LISTENER - INITIAL SPEC
+            addSpec.addActionListener(e -> {
+                try {
+                    int x_part = Integer.parseInt(x_particle.getText());
+                    int y_part = Integer.parseInt(y_particle.getText());
+                    double velo_val = Double.parseDouble(velocity.getText());
+                    double theta_val = Double.parseDouble(theta.getText());
+
+                    //System.out.printf("InitSpec %d , %d , %f , %f ", x_part, y_part, velo_val, theta_val);
+                    
+                    // Create a new Particle object with the retrieved values
+                    Particle newParticle = new Particle(x_part, y_part, velo_val, theta_val);
+                    particles.add(newParticle);
+                    PARTICLE_FRAME.repaint();
+
+                } catch (NumberFormatException num) {
+                    JOptionPane.showMessageDialog(this, "Invalid input format!");
+
+                }
+                            
+            });
+
+            // WALL
+            addWall.addActionListener(e -> {
+                try {
+                    int sw_X = Integer.parseInt(X_startwall.getText());
+                    int sw_Y = Integer.parseInt(Y_startwall.getText());
+                    int ew_X = Integer.parseInt(X_endwall.getText());
+                    int ew_Y = Integer.parseInt(Y_endwall.getText());
+
+                    System.out.printf("\n" + "Wall %d , %d , %d , %d", sw_X, sw_Y, ew_X, ew_Y);
+                    
+                    // Create a new Particle object with the retrieved values
+                    //Particle newParticle = new Particle(x_part, y_part, velo_val, theta_val);
+                    //particles.add(newParticle);
+                    //PARTICLE_FRAME.repaint();
+
+                } catch (NumberFormatException num) {
+                    JOptionPane.showMessageDialog(this, "Invalid input format!");
+
+                }
+                            
+            });
+
+
     }
 
     /*  Method to create a tab panel */
@@ -270,6 +323,31 @@ public class MainInterface extends JFrame {
     
         // Adjust the size of the tabPanel to fit its content
         tabPanel.setPreferredSize(new Dimension(300, 350));
+
+        // ACTION LISTENER - SPEC 1
+        addSpec1.addActionListener(e -> {
+            try {
+                int num_part = Integer.parseInt(num_particle.getText());
+                int sp_X = Integer.parseInt(X_sp.getText());
+                int sp_Y = Integer.parseInt(Y_sp.getText());
+                int ep_X = Integer.parseInt(X_ep.getText());
+                int ep_Y = Integer.parseInt(Y_ep.getText());
+                double velo_val = Double.parseDouble(velocity.getText());
+                double theta_val = Double.parseDouble(theta.getText());
+
+                System.out.printf( "\n" + "Spec 1 Check: %d , %d , %d , %d , %d , %f , %f ", num_part, sp_X, sp_Y, ep_X, ep_Y, velo_val, theta_val);
+                
+                // Create a new Particle object with the retrieved values
+                //Particle newParticle = new Particle(x_part, y_part, velo_val, theta_val);
+                //particles.add(newParticle);
+                //PARTICLE_FRAME.repaint();
+
+            } catch (NumberFormatException num) {
+                JOptionPane.showMessageDialog(this, "Invalid input format!");
+
+            }
+                        
+        });
     
         return tabPanel;
     }
@@ -347,6 +425,30 @@ public class MainInterface extends JFrame {
     
         // Adjust the size of the tabPanel to fit its content
         tabPanel.setPreferredSize(new Dimension(300, 350));
+
+        // ACTION LISTENER - SPEC 2
+        addSpec2.addActionListener(e -> {
+            try {
+                int num_part = Integer.parseInt(num_particle.getText());
+                int x_part = Integer.parseInt(x_particle.getText());
+                int y_part = Integer.parseInt(y_particle.getText());
+                double theta_start = Double.parseDouble(start_theta.getText());
+                double theta_end = Double.parseDouble(end_theta.getText());
+                double velo_val = Double.parseDouble(velocity.getText());
+
+                System.out.printf("\n" + "Spec 2 Check: %d , %d , %d , %f , %f , %f", num_part, x_part, y_part, theta_start, theta_end, velo_val);
+                
+                // Create a new Particle object with the retrieved values
+                //Particle newParticle = new Particle(x_part, y_part, velo_val, theta_val);
+                //particles.add(newParticle);
+                //PARTICLE_FRAME.repaint();
+
+            } catch (NumberFormatException num) {
+                JOptionPane.showMessageDialog(this, "Invalid input format!");
+
+            }
+                        
+        });
     
         return tabPanel;
     }
@@ -424,9 +526,34 @@ public class MainInterface extends JFrame {
     
         // Adjust the size of the tabPanel to fit its content
         tabPanel.setPreferredSize(new Dimension(300, 350));
+
+        // ACTION LISTENER - SPEC 3
+        addSpec3.addActionListener(e -> {
+            try {
+                int num_part = Integer.parseInt(num_particle.getText());
+                int x_part = Integer.parseInt(x_particle.getText());
+                int y_part = Integer.parseInt(y_particle.getText());
+                double velo_start = Double.parseDouble(start_velocity.getText());
+                double velo_end = Double.parseDouble(end_velocity.getText());
+                double theta_val = Double.parseDouble(theta.getText());
+
+                System.out.printf("\n" + "Spec 3 Check: %d , %d , %d , %f , %f , %f", num_part, x_part, y_part, velo_start, velo_end, theta_val);
+                
+                // Create a new Particle object with the retrieved values
+                //Particle newParticle = new Particle(x_part, y_part, velo_val, theta_val);
+                //particles.add(newParticle);
+                //PARTICLE_FRAME.repaint();
+
+            } catch (NumberFormatException num) {
+                JOptionPane.showMessageDialog(this, "Invalid input format!");
+
+            }
+                        
+        });
     
         return tabPanel;
     }
+    
     
 
 

@@ -1,52 +1,47 @@
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Random;
-public class Particle {
-    private static final int particleSize = 3, SCREEN_HEIGHT = 1280, SCREEN_WIDTH = 720;
+import java.util.*;
 
-    private static final Random random = new Random();
-    private int x, y;
+public class Particle {
+    private static final int particleSize = 3, PARTFRAME_WIDTH = 1280, PARTFRAME_HEIGHT = 720;
+
+    private int x_part, y_part;
     private double theta, velocity;
     private Color color;
 
-    public Particle(int x, int y, double theta, double velocity){
-        this.x = x;
-        this.y = y;
+    public Particle(int x, int y, double velocity, double theta){
+        this.x_part = x;
+        this.y_part = y;
         this.theta = Math.toRadians(theta);
         this.velocity = velocity;
-        this.color = randomColor();
+        this.color = Color.white;
+
+        System.out.printf("Particle Class: %d , %d , %f , %f ", x_part, y_part, velocity, theta);
+
     }
 
     public void draw(Graphics graphics){
         graphics.setColor(color);
-        graphics.fillRect(x, y, particleSize, particleSize);
+        graphics.fillRect(x_part, y_part, particleSize, particleSize);
     }
 
     public void move(ArrayList<Wall> wallList){
-        x = (int)(x + velocity * Math.cos(theta));
-        y = (int)(y + velocity * Math.cos(theta));
+        x_part = (int)(x_part + velocity * Math.cos(theta));
+        y_part = (int)(y_part + velocity * Math.cos(theta));
 
         //wall collision
         for(Wall wall: wallList){
 
         }
 
-        if (x <= 0 || x >= SCREEN_WIDTH) {
+        if (x_part <= 0 || x_part >= PARTFRAME_WIDTH) {
             theta = Math.PI - theta;
-            x = Math.max(0, Math.min(x, SCREEN_WIDTH));
+            x_part = Math.max(0, Math.min(x_part, PARTFRAME_WIDTH));
         }
-        if (y <= 0 || y >= SCREEN_HEIGHT) {
+        if (y_part <= 0 || y_part >= PARTFRAME_HEIGHT) {
             theta = -theta;
-            y = Math.max(0, Math.min(y, SCREEN_HEIGHT));
+            y_part = Math.max(0, Math.min(y_part, PARTFRAME_HEIGHT));
         }
 
     }
 
-    public Color randomColor(){
-        int r  = 128 + random.nextInt(128);
-        int g = 128 + random.nextInt(128);
-        int b = 128 + random.nextInt(128);
-
-        return new Color(r, g, b);
-    }
 }
