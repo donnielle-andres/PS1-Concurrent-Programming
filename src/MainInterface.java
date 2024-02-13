@@ -65,10 +65,14 @@ public class MainInterface extends JFrame {
         setLayout(new BorderLayout());
         setResizable(false);
 
+        // PARTICLE FRAME
         PARTICLE_FRAME = new JPanel(){
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
+
+
+                fps_label.setBounds(1220, 0, 100, 20);
                 
             }
         };
@@ -77,7 +81,14 @@ public class MainInterface extends JFrame {
         PARTICLE_FRAME.setBackground(Color.BLACK);
         add(PARTICLE_FRAME, BorderLayout.CENTER);
 
+        // FPS LABEL
+        fps_label = new JLabel("FPS: 0");
+        fps_label.setForeground(Color.WHITE); 
+        fps_label.setHorizontalAlignment(SwingConstants.LEFT);
+        PARTICLE_FRAME.setLayout(null); 
+        PARTICLE_FRAME.add(fps_label);
 
+        // INPUT FRAME
         INPUT_FRAME = new JPanel(new BorderLayout());
         INPUT_FRAME.setPreferredSize(new Dimension(300, 720));
         INPUT_FRAME.setBorder(BorderFactory.createCompoundBorder(
@@ -119,25 +130,22 @@ public class MainInterface extends JFrame {
             INPUT_FRAME.add(initialSpec, BorderLayout.NORTH);
 
         // SPECS 1-3 TABS
+            JTabbedPane tabbedPane = new JTabbedPane();
+            tabbedPane.setSize(300, 250);
 
-            /* SPECS 1 - START AND END POINT */
-            // Create the tabbed pane for the bottom section
-                JTabbedPane tabbedPane = new JTabbedPane();
-                tabbedPane.setSize(300, 250);
+            // Create tab panels
+            JPanel specsTab1 = onespecsTab();
+            JPanel specsTab2 = twospecsTab();
+            JPanel specsTab3 = threespecsTab();
 
-                // Create tab panels
-                JPanel specsTab1 = onespecsTab();
-                JPanel specsTab2 = twospecsTab();
-                JPanel specsTab3 = threespecsTab();
-
-                // Add tab panels to the tabbed pane
-                tabbedPane.addTab("Specs 1", specsTab1);
-                tabbedPane.addTab("Specs 2", specsTab2);
-                tabbedPane.addTab("Specs 3", specsTab3);
-                
-                
-                // Add the top panel and tabbed pane to the input frame
-                INPUT_FRAME.add(tabbedPane, BorderLayout.CENTER);
+            // Add tab panels to the tabbed pane
+            tabbedPane.addTab("Specs 1", specsTab1);
+            tabbedPane.addTab("Specs 2", specsTab2);
+            tabbedPane.addTab("Specs 3", specsTab3);
+            
+            
+            // Add the top panel and tabbed pane to the input frame
+            INPUT_FRAME.add(tabbedPane, BorderLayout.CENTER);
 
 
         // WALL
