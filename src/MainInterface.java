@@ -79,7 +79,7 @@ public class MainInterface extends JFrame {
                 }
 
 
-                fps_label.setBounds(1220, 0, 100, 20);
+                fps_label.setBounds(1180, 0, 100, 20);
                 
             }
         };
@@ -94,6 +94,7 @@ public class MainInterface extends JFrame {
         fps_label.setHorizontalAlignment(SwingConstants.LEFT);
         PARTICLE_FRAME.setLayout(null); 
         PARTICLE_FRAME.add(fps_label);
+        new Thread(this::fpsCounter).start();
 
         // INPUT FRAME
         INPUT_FRAME = new JPanel(new BorderLayout());
@@ -233,6 +234,8 @@ public class MainInterface extends JFrame {
                 }
                             
             });
+
+            
 
 
     }
@@ -554,7 +557,27 @@ public class MainInterface extends JFrame {
         return tabPanel;
     }
     
-    
+    private void fpsCounter() {
+        int frames = 0;
+        long last_time = System.currentTimeMillis();
+
+        while (true) {
+            frames++;
+
+            if (System.currentTimeMillis() - last_time >= 1000) {
+                last_time += 1000;
+                int finalFrames = frames;
+                SwingUtilities.invokeLater(() -> fps_label.setText("FPS: " + finalFrames));
+                frames = 0;
+            }
+
+            try {
+                Thread.sleep(2);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 
     //RUN

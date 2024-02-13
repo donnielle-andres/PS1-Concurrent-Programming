@@ -1,5 +1,5 @@
 import java.awt.*;
-import java.awt.geom.Line2D;
+import java.awt.geom.*;
 
 public class Wall{
     private int x1, y1, x2, y2;
