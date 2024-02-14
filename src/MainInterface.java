@@ -2,20 +2,23 @@ import javax.swing.*;
 import java.awt.*;
 import java.nio.file.DirectoryNotEmptyException;
 import java.util.*;
+import java.util.concurrent.*;
 
 
 public class MainInterface extends JFrame {
 
     private ArrayList<Particle> particles = new ArrayList<Particle>();
+    private ArrayList<Wall> walls = new ArrayList<Wall>();
+    private final ForkJoinPool taskThread= new ForkJoinPool(); // physicsThreadPool
+    private final ForkJoinPool renderThread = new ForkJoinPool();
 
     //WINDOW SIZE
     private int WINDOW_WIDTH = 1580;
     private int WINDOW_HEIGHT = 720;
 
-    //PANELS
+    //FRAMES
     private JPanel PARTICLE_FRAME;
     private JPanel INPUT_FRAME;
-
     private int PARTFRAME_WIDTH = 1280;
     private int PARTFRAME_HEIGHT = 720;
 
@@ -76,6 +79,12 @@ public class MainInterface extends JFrame {
                 // Draw particles
                 for (Particle particle : particles){
                     particle.draw(g);
+                }
+
+                // Draw wall
+                for (Wall wall : walls) {
+                    g.setColor(Color.BLUE);
+                    g.drawLine(wall.startWall.x, getHeight() - wall.startWall.y, wall.endWall.x, getHeight() - wall.endWall.y);
                 }
 
 
@@ -147,9 +156,9 @@ public class MainInterface extends JFrame {
             JPanel specsTab3 = threespecsTab();
 
             // Add tab panels to the tabbed pane
-            tabbedPane.addTab("Specs 1", specsTab1);
-            tabbedPane.addTab("Specs 2", specsTab2);
-            tabbedPane.addTab("Specs 3", specsTab3);
+            tabbedPane.addTab("Point", specsTab1);
+            tabbedPane.addTab("Velocity", specsTab2);
+            tabbedPane.addTab("Theta", specsTab3);
             
             
             // Add the top panel and tabbed pane to the input frame
@@ -250,8 +259,8 @@ public class MainInterface extends JFrame {
         gbcTab.insets = new Insets(5, 5, 5, 5);
     
         // Number of Particles
-        JLabel numpart_label = new JLabel("Number of Particles:");
-        JTextField num_particle = new JTextField(10);
+        numpart_label = new JLabel("Number of Particles:");
+        num_particle = new JTextField(10);
         tabPanel.add(numpart_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(num_particle, gbcTab);
@@ -263,16 +272,16 @@ public class MainInterface extends JFrame {
         tabPanel.add(startPoint_label, gbcTab);
         gbcTab.gridy++;
     
-        JLabel Xsp_label = new JLabel("X:");
-        JTextField X_sp = new JTextField(10);
+        Xsp_label = new JLabel("X:");
+        X_sp = new JTextField(10);
         tabPanel.add(Xsp_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(X_sp, gbcTab);
         gbcTab.gridx = 0;
         gbcTab.gridy++;
     
-        JLabel Ysp_label = new JLabel("Y:");
-        JTextField Y_sp = new JTextField(10);
+        Ysp_label = new JLabel("Y:");
+        Y_sp = new JTextField(10);
         tabPanel.add(Ysp_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(Y_sp, gbcTab);
@@ -284,16 +293,16 @@ public class MainInterface extends JFrame {
         tabPanel.add(endPoint_label, gbcTab);
         gbcTab.gridy++;
     
-        JLabel Xep_label = new JLabel("X:");
-        JTextField X_ep = new JTextField(10);
+        Xep_label = new JLabel("X:");
+        X_ep = new JTextField(10);
         tabPanel.add(Xep_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(X_ep, gbcTab);
         gbcTab.gridx = 0;
         gbcTab.gridy++;
     
-        JLabel Yep_label = new JLabel("Y:");
-        JTextField Y_ep = new JTextField(10);
+        Yep_label = new JLabel("Y:");
+        Y_ep = new JTextField(10);
         tabPanel.add(Yep_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(Y_ep, gbcTab);
@@ -301,8 +310,8 @@ public class MainInterface extends JFrame {
         gbcTab.gridy++;
     
         // Velocity
-        JLabel vel_label = new JLabel("Velocity:");
-        JTextField velocity = new JTextField(10);
+        vel_label = new JLabel("Velocity:");
+        velocity = new JTextField(10);
         tabPanel.add(vel_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(velocity, gbcTab);
@@ -310,8 +319,8 @@ public class MainInterface extends JFrame {
         gbcTab.gridy++;
     
         // Theta
-        JLabel theta_label = new JLabel("Theta:");
-        JTextField theta = new JTextField(10);
+        theta_label = new JLabel("Theta:");
+        theta = new JTextField(10);
         tabPanel.add(theta_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(theta, gbcTab);
@@ -321,7 +330,7 @@ public class MainInterface extends JFrame {
         // Add Button
         gbcTab.gridx = 0;
         gbcTab.gridwidth = 2;
-        JButton addSpec1 = new JButton("Specs 1");
+        addSpec1 = new JButton("Specs 1");
         tabPanel.add(addSpec1, gbcTab);
     
         // Adjust the size of the tabPanel to fit its content
@@ -364,8 +373,8 @@ public class MainInterface extends JFrame {
         gbcTab.insets = new Insets(5, 5, 5, 5);
     
         // Number of Particles
-        JLabel numpart_label = new JLabel("Number of Particles:");
-        JTextField num_particle = new JTextField(10);
+        numpart_label = new JLabel("Number of Particles:");
+        num_particle = new JTextField(10);
         tabPanel.add(numpart_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(num_particle, gbcTab);
@@ -377,16 +386,16 @@ public class MainInterface extends JFrame {
         tabPanel.add(particle_label, gbcTab);
         gbcTab.gridy++;
     
-        JLabel x_label = new JLabel("X:");
-        JTextField x_particle= new JTextField(10);
+        x_label = new JLabel("X:");
+        x_particle= new JTextField(10);
         tabPanel.add(x_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(x_particle, gbcTab);
         gbcTab.gridx = 0;
         gbcTab.gridy++;
     
-        JLabel y_label = new JLabel("Y:");
-        JTextField y_particle = new JTextField(10);
+        y_label = new JLabel("Y:");
+        y_particle = new JTextField(10);
         tabPanel.add(y_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(y_particle, gbcTab);
@@ -394,16 +403,16 @@ public class MainInterface extends JFrame {
         gbcTab.gridy++;
 
         // Theta
-        JLabel st_label = new JLabel("Starting Theta:");
-        JTextField start_theta = new JTextField(10);
+        st_label = new JLabel("Starting Theta:");
+        start_theta = new JTextField(10);
         tabPanel.add(st_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(start_theta, gbcTab);
         gbcTab.gridx = 0;
         gbcTab.gridy++;
 
-        JLabel et_label = new JLabel("Ending Theta:");
-        JTextField end_theta = new JTextField(10);
+        et_label = new JLabel("Ending Theta:");
+        end_theta = new JTextField(10);
         tabPanel.add(et_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(end_theta, gbcTab);
@@ -411,8 +420,8 @@ public class MainInterface extends JFrame {
         gbcTab.gridy++;
     
         // Velocity
-        JLabel vel_label = new JLabel("Velocity:");
-        JTextField velocity = new JTextField(10);
+        vel_label = new JLabel("Velocity:");
+        velocity = new JTextField(10);
         tabPanel.add(vel_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(velocity, gbcTab);
@@ -423,7 +432,7 @@ public class MainInterface extends JFrame {
         // Add Button
         gbcTab.gridx = 0;
         gbcTab.gridwidth = 2;
-        JButton addSpec2 = new JButton("Specs 2");
+        addSpec2 = new JButton("Specs 2");
         tabPanel.add(addSpec2, gbcTab);
     
         // Adjust the size of the tabPanel to fit its content
@@ -465,8 +474,8 @@ public class MainInterface extends JFrame {
         gbcTab.insets = new Insets(5, 5, 5, 5);
     
         // Number of Particles
-        JLabel numpart_label = new JLabel("Number of Particles:");
-        JTextField num_particle = new JTextField(10);
+        numpart_label = new JLabel("Number of Particles:");
+        num_particle = new JTextField(10);
         tabPanel.add(numpart_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(num_particle, gbcTab);
@@ -478,16 +487,16 @@ public class MainInterface extends JFrame {
         tabPanel.add(particle_label, gbcTab);
         gbcTab.gridy++;
     
-        JLabel x_label = new JLabel("X:");
-        JTextField x_particle= new JTextField(10);
+        x_label = new JLabel("X:");
+        x_particle= new JTextField(10);
         tabPanel.add(x_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(x_particle, gbcTab);
         gbcTab.gridx = 0;
         gbcTab.gridy++;
     
-        JLabel y_label = new JLabel("Y:");
-        JTextField y_particle = new JTextField(10);
+        y_label = new JLabel("Y:");
+        y_particle = new JTextField(10);
         tabPanel.add(y_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(y_particle, gbcTab);
@@ -495,16 +504,16 @@ public class MainInterface extends JFrame {
         gbcTab.gridy++;
 
         // Velocity
-        JLabel sv_label = new JLabel("Starting Velocity:");
-        JTextField start_velocity = new JTextField(10);
+        sv_label = new JLabel("Starting Velocity:");
+        start_velocity = new JTextField(10);
         tabPanel.add(sv_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(start_velocity, gbcTab);
         gbcTab.gridx = 0;
         gbcTab.gridy++;
 
-        JLabel ev_label = new JLabel("Ending Velocity:");
-        JTextField end_velocity = new JTextField(10);
+        ev_label = new JLabel("Ending Velocity:");
+        end_velocity = new JTextField(10);
         tabPanel.add(ev_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(end_velocity, gbcTab);
@@ -512,8 +521,8 @@ public class MainInterface extends JFrame {
         gbcTab.gridy++;
 
         // Theta
-        JLabel theta_label = new JLabel("Theta:");
-        JTextField theta = new JTextField(10);
+        theta_label = new JLabel("Theta:");
+        theta = new JTextField(10);
         tabPanel.add(theta_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(theta, gbcTab);
@@ -524,7 +533,7 @@ public class MainInterface extends JFrame {
         // Add Button
         gbcTab.gridx = 0;
         gbcTab.gridwidth = 2;
-        JButton addSpec3 = new JButton("Specs 3");
+        addSpec3 = new JButton("Specs 3");
         tabPanel.add(addSpec3, gbcTab);
     
         // Adjust the size of the tabPanel to fit its content
@@ -557,6 +566,8 @@ public class MainInterface extends JFrame {
         return tabPanel;
     }
     
+
+// MAS BETTER ATA IF NASA PARTICLE_SIMULATOR TOH 
     private void fpsCounter() {
         int frames = 0;
         long last_time = System.currentTimeMillis();
@@ -579,13 +590,47 @@ public class MainInterface extends JFrame {
         }
     }
 
-
-    //RUN
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            MainInterface app = new MainInterface();
-            app.setVisible(true);
-        });
+    //
+    public void addParticle(Particle particle) {
+        particles.add(particle);
     }
+
+    public void addWall(Wall wall) {
+        walls.add(wall);
+    }
+
+    public void runSimulation() {
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(() -> {
+            long startTime = System.nanoTime();
+            processParticles(Particle_Simulator.TIME_STEP); // Update particle physics
+            SwingUtilities.invokeLater(this::repaint); // Repaint the canvas
+    
+            long elapsedTime = System.nanoTime() - startTime;
+            long sleepTime = Math.max(0, Particle_Simulator.OPTIMAL_TIME - elapsedTime) / 1_000_000; // Convert nanoseconds to milliseconds
+    
+            try {
+                Thread.sleep(sleepTime);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }, 0, Particle_Simulator.OPTIMAL_TIME, TimeUnit.MILLISECONDS);
+    }
+
+
+    private void processParticles(double deltaTime) {
+        ExecutorService executor = Executors.newCachedThreadPool();
+        for (Particle particle : particles) {
+            executor.submit(() -> {
+                particle.updatePosition(deltaTime);
+                particle.wallCollision(PARTFRAME_WIDTH, PARTFRAME_HEIGHT, walls);
+            });
+        }
+        executor.shutdown();
+    }
+
+
+
+
 
 }
