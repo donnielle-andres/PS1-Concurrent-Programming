@@ -18,7 +18,7 @@ public class Particle {
         this.x_part = x;
         this.y_part = y;
         this.position = new Point (x, y);
-        this.theta = Math.toRadians(theta);
+        this.theta = theta;
         this.velocity = velocity;
         this.color = Color.white;
 

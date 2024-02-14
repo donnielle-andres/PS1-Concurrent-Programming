@@ -37,29 +37,29 @@ public class MainInterface extends JFrame {
 
     /* INPUTS */
         //PARTICLES
-        private JTextField x_particle, y_particle;
-        private JTextField num_particle;
-        private JTextField X_sp, Y_sp;
-        private JTextField X_ep, Y_ep;
+        public JTextField x_particle, y_particle;
+        public JTextField num_particle;
+        public JTextField X_sp, Y_sp;
+        public JTextField X_ep, Y_ep;
 
         //VELOCITY
-        private JTextField velocity;
-        private JTextField start_velocity, end_velocity;
+        public JTextField velocity;
+        public JTextField start_velocity, end_velocity;
 
         //ANGLE
-        private JTextField theta;
-        private JTextField start_theta, end_theta;
+        public JTextField theta;
+        public JTextField start_theta, end_theta;
 
         //WALL
-        private JTextField X_startwall, Y_startwall;
-        private JTextField X_endwall, Y_endwall;
+        public JTextField X_startwall, Y_startwall;
+        public JTextField X_endwall, Y_endwall;
 
         //BUTTON
-        private JButton addSpec;
-        private JButton addSpec1;
-        private JButton addSpec2;
-        private JButton addSpec3;
-        private JButton addWall;
+        public JButton addSpec;
+        public JButton addSpec1;
+        public JButton addSpec2;
+        public JButton addSpec3;
+        public JButton addWall;
 
     
 
@@ -157,8 +157,8 @@ public class MainInterface extends JFrame {
 
             // Add tab panels to the tabbed pane
             tabbedPane.addTab("Point", specsTab1);
-            tabbedPane.addTab("Velocity", specsTab2);
-            tabbedPane.addTab("Theta", specsTab3);
+            tabbedPane.addTab("Theta", specsTab2);
+            tabbedPane.addTab("Velocity", specsTab3);
             
             
             // Add the top panel and tabbed pane to the input frame
@@ -170,22 +170,22 @@ public class MainInterface extends JFrame {
         wallPanel.setBorder(BorderFactory.createTitledBorder("WALL"));
 
         JPanel wallSpec = new JPanel(new GridLayout(0, 2, 2, 2));
-            X_startwall_label= new JLabel("X:");
+            X_startwall_label= new JLabel("Wall Start Point X:");
             X_startwall = new JTextField(20);
             wallSpec.add(X_startwall_label);
             wallSpec.add(X_startwall);
 
-            Y_startwall_label= new JLabel("Y:");
+            Y_startwall_label= new JLabel("Wall Start Point Y:");
             Y_startwall = new JTextField(20);
             wallSpec.add(Y_startwall_label);
             wallSpec.add(Y_startwall);
 
-            X_endwall_label= new JLabel("X:");
+            X_endwall_label= new JLabel("Wall End Point X:");
             X_endwall = new JTextField(20);
             wallSpec.add(X_endwall_label);
             wallSpec.add(X_endwall);
 
-            Y_endwall_label= new JLabel("Y:");
+            Y_endwall_label= new JLabel("Wall End Point Y:");
             Y_endwall = new JTextField(20);
             wallSpec.add(Y_endwall_label);
             wallSpec.add(Y_endwall);
@@ -202,24 +202,34 @@ public class MainInterface extends JFrame {
 
         // ACTION LISTENER - INITIAL SPEC
             addSpec.addActionListener(e -> {
+                String xText = x_particle.getText();
+                String yText = y_particle.getText();
+                String veloText = velocity.getText();
+                String thetaText = theta.getText();
+            
+                // Check if all fields are filled
+                if (xText.isEmpty() || yText.isEmpty() || veloText.isEmpty() || thetaText.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Please fill in all fields!");
+                    System.out.printf("InitSpec %s , %s , %s , %s ", xText, yText, veloText, thetaText);
+                    return; // Stop execution if any field is empty
+                }
+            
+                // Check if the inputs are valid integers/doubles
                 try {
-                    int x_part = Integer.parseInt(x_particle.getText());
-                    int y_part = Integer.parseInt(y_particle.getText());
-                    double velo_val = Double.parseDouble(velocity.getText());
-                    double theta_val = Double.parseDouble(theta.getText());
-
-                    //System.out.printf("InitSpec %d , %d , %f , %f ", x_part, y_part, velo_val, theta_val);
-                    
+                    int x_part = Integer.parseInt(xText);
+                    int y_part = Integer.parseInt(yText);
+                    double velo_val = Double.parseDouble(veloText);
+                    double theta_val = Double.parseDouble(thetaText);
+            
                     // Create a new Particle object with the retrieved values
                     Particle newParticle = new Particle(x_part, y_part, velo_val, theta_val);
                     particles.add(newParticle);
                     PARTICLE_FRAME.repaint();
-
-                } catch (NumberFormatException num) {
-                    JOptionPane.showMessageDialog(this, "Invalid input format!");
-
+            
+                    System.out.printf("InitSpec %d , %d , %f , %f ", x_part, y_part, velo_val, theta_val);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "Invalid input format! Please enter valid numbers.");
                 }
-                            
             });
 
             // WALL
