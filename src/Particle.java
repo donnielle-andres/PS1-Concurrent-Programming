@@ -67,7 +67,7 @@ public class Particle {
 
 
 // Wall Collision - Handle Wall Collision
-    public void wallCollision(int PARTFRAME_WIDTH, int PARTFRAME_HEIGHT, ArrayList<Wall> walls) {
+    public void partCollision(int PARTFRAME_WIDTH, int PARTFRAME_HEIGHT, ArrayList<Wall> walls) {
         int buffer = 1; // A small buffer to prevent sticking to the wall
 
         handleHorizontalCollision(PARTFRAME_WIDTH, particleSize, buffer);
@@ -75,7 +75,7 @@ public class Particle {
 
         // Handle wall collisions
         for (Wall wall : walls) {
-            if (checkCollision(wall)) {
+            if (wallCollision(wall)) {
                 checkParticleBounce(wall);
             }
         }
@@ -111,7 +111,7 @@ public class Particle {
     }
 
 // Check Wall Collision
-    private boolean checkCollision(Wall wall) {
+    private boolean wallCollision(Wall wall) {
         // Current position
         double currX = position.x;
         double currY = position.y;
@@ -210,11 +210,6 @@ public class Particle {
         }
 
     }
-
-
-    // Spec 1 - Between Points
-
-
 
     
 

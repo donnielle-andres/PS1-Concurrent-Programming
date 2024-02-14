@@ -621,7 +621,7 @@ public class MainInterface extends JFrame {
         for (Particle particle : particleList) {
             executor.submit(() -> {
                 particle.updatePosition(deltaTime);
-                particle.wallCollision(PARTFRAME_WIDTH, PARTFRAME_HEIGHT, wallList);
+                particle.partCollision(PARTFRAME_WIDTH, PARTFRAME_HEIGHT, wallList);
             });
         }
         executor.shutdown();
