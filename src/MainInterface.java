@@ -7,8 +7,8 @@ import java.util.concurrent.*;
 
 public class MainInterface extends JFrame {
 
-    private ArrayList<Particle> particles = new ArrayList<Particle>();
-    private ArrayList<Wall> walls = new ArrayList<Wall>();
+    private ArrayList<Particle> particleList = new ArrayList<Particle>();
+    private ArrayList<Wall> wallList = new ArrayList<Wall>();
     private final ForkJoinPool taskThread= new ForkJoinPool(); // physicsThreadPool
     private final ForkJoinPool renderThread = new ForkJoinPool();
 
@@ -77,14 +77,13 @@ public class MainInterface extends JFrame {
                 super.paintComponent(g);
 
                 // Draw particles
-                for (Particle particle : particles){
+                for (Particle particle : particleList){
                     particle.draw(g);
                 }
 
                 // Draw wall
-                for (Wall wall : walls) {
-                    g.setColor(Color.WHITE);
-                    g.drawLine(wall.startWall.x, PARTFRAME_HEIGHT - wall.startWall.y, wall.endWall.x, PARTFRAME_HEIGHT - wall.endWall.y);
+                for (Wall wall : wallList) {
+                    wall.draw(g);
                 }
 
                 fps_label.setBounds(1180, 0, 100, 20);
@@ -211,7 +210,7 @@ public class MainInterface extends JFrame {
                     
                     // Create a new Particle object with the retrieved values
                     Particle newParticle = new Particle(x_part, y_part, velo_val, theta_val);
-                    particles.add(newParticle);
+                    particleList.add(newParticle);
                     PARTICLE_FRAME.repaint();
 
                 } catch (NumberFormatException num) {
@@ -231,10 +230,10 @@ public class MainInterface extends JFrame {
 
                     System.out.printf("\n" + "Wall %d , %d , %d , %d", sw_X, sw_Y, ew_X, ew_Y);
                     
-                    // Create a new Particle object with the retrieved values
-                    //Particle newParticle = new Particle(x_part, y_part, velo_val, theta_val);
-                    //particles.add(newParticle);
-                    //PARTICLE_FRAME.repaint();
+                    // Create a new Wall object with the retrieved values
+                    Wall newWall = new Wall(sw_X, sw_Y, ew_X, ew_Y);
+                    wallList.add(newWall);
+                    PARTICLE_FRAME.repaint();
 
                 } catch (NumberFormatException num) {
                     JOptionPane.showMessageDialog(this, "Invalid input format!");
@@ -591,11 +590,11 @@ public class MainInterface extends JFrame {
 
     //
     public void addParticle(Particle particle) {
-        particles.add(particle);
+        particleList.add(particle);
     }
 
     public void addWall(Wall wall) {
-        walls.add(wall);
+        wallList.add(wall);
     }
 
     public void runSimulation() {
@@ -619,10 +618,10 @@ public class MainInterface extends JFrame {
 
     private void processParticles(double deltaTime) {
         ExecutorService executor = Executors.newCachedThreadPool();
-        for (Particle particle : particles) {
+        for (Particle particle : particleList) {
             executor.submit(() -> {
                 particle.updatePosition(deltaTime);
-                particle.wallCollision(PARTFRAME_WIDTH, PARTFRAME_HEIGHT, walls);
+                particle.wallCollision(PARTFRAME_WIDTH, PARTFRAME_HEIGHT, wallList);
             });
         }
         executor.shutdown();
