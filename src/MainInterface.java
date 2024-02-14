@@ -83,10 +83,9 @@ public class MainInterface extends JFrame {
 
                 // Draw wall
                 for (Wall wall : walls) {
-                    g.setColor(Color.BLUE);
-                    g.drawLine(wall.startWall.x, getHeight() - wall.startWall.y, wall.endWall.x, getHeight() - wall.endWall.y);
+                    g.setColor(Color.WHITE);
+                    g.drawLine(wall.startWall.x, PARTFRAME_HEIGHT - wall.startWall.y, wall.endWall.x, PARTFRAME_HEIGHT - wall.endWall.y);
                 }
-
 
                 fps_label.setBounds(1180, 0, 100, 20);
                 
@@ -120,23 +119,23 @@ public class MainInterface extends JFrame {
         particlePanel.setBorder(BorderFactory.createTitledBorder("PARTICLES"));
 
         JPanel initialSpec = new JPanel(new GridLayout(0, 2, 2, 2));
-            x_label = new JLabel("X:");
-            x_particle = new JTextField(20);
+        JLabel x_label = new JLabel("X:");
+        JTextField x_particle = new JTextField(20);
             initialSpec.add(x_label);
             initialSpec.add(x_particle);
 
             y_label = new JLabel("Y:");
-            y_particle = new JTextField(20);
+            JTextField y_particle = new JTextField(20);
             initialSpec.add(y_label);
             initialSpec.add(y_particle);
 
             vel_label = new JLabel("Velocity:");
-            velocity = new JTextField(20);
+            JTextField velocity = new JTextField(20);
             initialSpec.add(vel_label);
             initialSpec.add(velocity);
 
             theta_label = new JLabel("Theta:");
-            theta = new JTextField(20);
+            JTextField theta = new JTextField(20);
             initialSpec.add(theta_label);
             initialSpec.add(theta);
 
@@ -202,34 +201,24 @@ public class MainInterface extends JFrame {
 
         // ACTION LISTENER - INITIAL SPEC
             addSpec.addActionListener(e -> {
-                String xText = x_particle.getText();
-                String yText = y_particle.getText();
-                String veloText = velocity.getText();
-                String thetaText = theta.getText();
-            
-                // Check if all fields are filled
-                if (xText.isEmpty() || yText.isEmpty() || veloText.isEmpty() || thetaText.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Please fill in all fields!");
-                    System.out.printf("InitSpec %s , %s , %s , %s ", xText, yText, veloText, thetaText);
-                    return; // Stop execution if any field is empty
-                }
-            
-                // Check if the inputs are valid integers/doubles
                 try {
-                    int x_part = Integer.parseInt(xText);
-                    int y_part = Integer.parseInt(yText);
-                    double velo_val = Double.parseDouble(veloText);
-                    double theta_val = Double.parseDouble(thetaText);
-            
-                    // Create a new Particle object with the retrieved values
-                    Particle newParticle = new Particle(x_part, y_part, velo_val, theta_val);
-                    particles.add(newParticle);
-                    PARTICLE_FRAME.repaint();
-            
+                    int x_part = Integer.parseInt(x_particle.getText());
+                    int y_part = Integer.parseInt(y_particle.getText());
+                    double velo_val = Double.parseDouble(velocity.getText());
+                    double theta_val = Double.parseDouble(theta.getText());
+
                     System.out.printf("InitSpec %d , %d , %f , %f ", x_part, y_part, velo_val, theta_val);
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(this, "Invalid input format! Please enter valid numbers.");
+                    
+                    // Create a new Particle object with the retrieved values
+                    //Particle newParticle = new Particle(x_part, y_part, velo_val, theta_val);
+                    //particles.add(newParticle);
+                    //PARTICLE_FRAME.repaint();
+
+                } catch (NumberFormatException num) {
+                    JOptionPane.showMessageDialog(this, "Invalid input format!");
+
                 }
+                            
             });
 
             // WALL
@@ -270,7 +259,7 @@ public class MainInterface extends JFrame {
     
         // Number of Particles
         numpart_label = new JLabel("Number of Particles:");
-        num_particle = new JTextField(10);
+        JTextField num_particle = new JTextField(10);
         tabPanel.add(numpart_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(num_particle, gbcTab);
@@ -283,7 +272,7 @@ public class MainInterface extends JFrame {
         gbcTab.gridy++;
     
         Xsp_label = new JLabel("X:");
-        X_sp = new JTextField(10);
+        JTextField X_sp = new JTextField(10);
         tabPanel.add(Xsp_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(X_sp, gbcTab);
@@ -291,7 +280,7 @@ public class MainInterface extends JFrame {
         gbcTab.gridy++;
     
         Ysp_label = new JLabel("Y:");
-        Y_sp = new JTextField(10);
+        JTextField Y_sp = new JTextField(10);
         tabPanel.add(Ysp_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(Y_sp, gbcTab);
@@ -304,7 +293,7 @@ public class MainInterface extends JFrame {
         gbcTab.gridy++;
     
         Xep_label = new JLabel("X:");
-        X_ep = new JTextField(10);
+        JTextField X_ep = new JTextField(10);
         tabPanel.add(Xep_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(X_ep, gbcTab);
@@ -312,7 +301,7 @@ public class MainInterface extends JFrame {
         gbcTab.gridy++;
     
         Yep_label = new JLabel("Y:");
-        Y_ep = new JTextField(10);
+        JTextField Y_ep = new JTextField(10);
         tabPanel.add(Yep_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(Y_ep, gbcTab);
@@ -321,7 +310,7 @@ public class MainInterface extends JFrame {
     
         // Velocity
         vel_label = new JLabel("Velocity:");
-        velocity = new JTextField(10);
+        JTextField velocity = new JTextField(10);
         tabPanel.add(vel_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(velocity, gbcTab);
@@ -330,7 +319,7 @@ public class MainInterface extends JFrame {
     
         // Theta
         theta_label = new JLabel("Theta:");
-        theta = new JTextField(10);
+        JTextField theta = new JTextField(10);
         tabPanel.add(theta_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(theta, gbcTab);
@@ -384,7 +373,7 @@ public class MainInterface extends JFrame {
     
         // Number of Particles
         numpart_label = new JLabel("Number of Particles:");
-        num_particle = new JTextField(10);
+        JTextField num_particle = new JTextField(10);
         tabPanel.add(numpart_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(num_particle, gbcTab);
@@ -397,7 +386,7 @@ public class MainInterface extends JFrame {
         gbcTab.gridy++;
     
         x_label = new JLabel("X:");
-        x_particle= new JTextField(10);
+        JTextField x_particle= new JTextField(10);
         tabPanel.add(x_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(x_particle, gbcTab);
@@ -405,7 +394,7 @@ public class MainInterface extends JFrame {
         gbcTab.gridy++;
     
         y_label = new JLabel("Y:");
-        y_particle = new JTextField(10);
+        JTextField y_particle = new JTextField(10);
         tabPanel.add(y_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(y_particle, gbcTab);
@@ -414,7 +403,7 @@ public class MainInterface extends JFrame {
 
         // Theta
         st_label = new JLabel("Starting Theta:");
-        start_theta = new JTextField(10);
+        JTextField start_theta = new JTextField(10);
         tabPanel.add(st_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(start_theta, gbcTab);
@@ -422,7 +411,7 @@ public class MainInterface extends JFrame {
         gbcTab.gridy++;
 
         et_label = new JLabel("Ending Theta:");
-        end_theta = new JTextField(10);
+        JTextField end_theta = new JTextField(10);
         tabPanel.add(et_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(end_theta, gbcTab);
@@ -431,7 +420,7 @@ public class MainInterface extends JFrame {
     
         // Velocity
         vel_label = new JLabel("Velocity:");
-        velocity = new JTextField(10);
+        JTextField velocity = new JTextField(10);
         tabPanel.add(vel_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(velocity, gbcTab);
@@ -485,7 +474,7 @@ public class MainInterface extends JFrame {
     
         // Number of Particles
         numpart_label = new JLabel("Number of Particles:");
-        num_particle = new JTextField(10);
+        JTextField num_particle = new JTextField(10);
         tabPanel.add(numpart_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(num_particle, gbcTab);
@@ -498,7 +487,7 @@ public class MainInterface extends JFrame {
         gbcTab.gridy++;
     
         x_label = new JLabel("X:");
-        x_particle= new JTextField(10);
+        JTextField x_particle= new JTextField(10);
         tabPanel.add(x_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(x_particle, gbcTab);
@@ -506,7 +495,7 @@ public class MainInterface extends JFrame {
         gbcTab.gridy++;
     
         y_label = new JLabel("Y:");
-        y_particle = new JTextField(10);
+        JTextField y_particle = new JTextField(10);
         tabPanel.add(y_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(y_particle, gbcTab);
@@ -515,7 +504,7 @@ public class MainInterface extends JFrame {
 
         // Velocity
         sv_label = new JLabel("Starting Velocity:");
-        start_velocity = new JTextField(10);
+        JTextField start_velocity = new JTextField(10);
         tabPanel.add(sv_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(start_velocity, gbcTab);
@@ -523,7 +512,7 @@ public class MainInterface extends JFrame {
         gbcTab.gridy++;
 
         ev_label = new JLabel("Ending Velocity:");
-        end_velocity = new JTextField(10);
+        JTextField end_velocity = new JTextField(10);
         tabPanel.add(ev_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(end_velocity, gbcTab);
@@ -532,7 +521,7 @@ public class MainInterface extends JFrame {
 
         // Theta
         theta_label = new JLabel("Theta:");
-        theta = new JTextField(10);
+        JTextField theta = new JTextField(10);
         tabPanel.add(theta_label, gbcTab);
         gbcTab.gridx = 1;
         tabPanel.add(theta, gbcTab);
