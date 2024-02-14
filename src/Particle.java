@@ -20,7 +20,7 @@ public class Particle {
         this.position = new Point (x, y);
         this.theta = theta;
         this.velocity = velocity;
-        this.color = Color.white;
+        this.color = Color.WHITE;
 
         System.out.printf("Particle Class: %d , %d , %f , %f ", x_part, y_part, velocity, theta);
 
