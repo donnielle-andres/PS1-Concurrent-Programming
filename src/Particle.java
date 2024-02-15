@@ -189,31 +189,4 @@ public class Particle {
         // Ensure the angle is normalized to the range [0, 360)
         theta = (theta + 360) % 360;
     }
-
-
-
-
-    // Initial Spec
-    public void move(ArrayList<Wall> wallList){
-        // Calculate the next position based on velocity and angle
-        int nextX = (int)(position.x + velocity * Math.cos(Math.toRadians(theta)));
-        int nextY = (int)(position.y + velocity * Math.sin(Math.toRadians(theta)));
-    
-        // Check for collision with walls
-        for(Wall wall: wallList){
-            if (wallCollision(wall)) {
-                // Handle collision with the wall
-                checkParticleBounce(wall);
-            }
-        }
-    
-        // Update particle position
-        position.setLocation(nextX, nextY);
-        System.out.printf("\n Particle Move: %d , %d ", nextX, nextY);
-
-    }
-    
-
-    
-
 }
