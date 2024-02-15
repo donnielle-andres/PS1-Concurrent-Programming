@@ -346,11 +346,18 @@ public class MainInterface extends JFrame {
                 double theta_val = Double.parseDouble(theta.getText());
 
                 System.out.printf( "\n" + "Spec 1 Check: %d , %d , %d , %d , %d , %f , %f ", num_part, sp_X, sp_Y, ep_X, ep_Y, velo_val, theta_val);
-                
-                // Create a new Particle object with the retrieved values
-                //Particle newParticle = new Particle(x_part, y_part, velo_val, theta_val);
-                //particles.add(newParticle);
-                //PARTICLE_FRAME.repaint();
+
+                if (num_part > 0) {
+                    for (int i = 0; i < num_part; i++) {
+                        double ratio = (double) i / (num_part - 1);
+                        int x = sp_X + (int) ((ep_X - sp_X) * ratio);
+                        int y = sp_Y + (int) ((ep_Y - sp_Y) * ratio);
+                        Particle newParticle = (new Particle(x, y, theta_val, velo_val));
+                        particleList.add(newParticle);
+                        PARTICLE_FRAME.repaint();
+                    }
+                }
+
 
             } catch (NumberFormatException num) {
                 JOptionPane.showMessageDialog(this, "Invalid input format!");
@@ -447,11 +454,15 @@ public class MainInterface extends JFrame {
                 double velo_val = Double.parseDouble(velocity.getText());
 
                 System.out.printf("\n" + "Spec 2 Check: %d , %d , %d , %f , %f , %f", num_part, x_part, y_part, theta_start, theta_end, velo_val);
-                
-                // Create a new Particle object with the retrieved values
-                //Particle newParticle = new Particle(x_part, y_part, velo_val, theta_val);
-                //particles.add(newParticle);
-                //PARTICLE_FRAME.repaint();
+
+                double angleIncrement = (theta_end - theta_start) / (num_part - 1);
+
+                for (int i = 0; i < num_part; i++) {
+                    double theta_final = theta_start + (angleIncrement * i);
+                    Particle newParticle = new Particle(x_part, y_part, theta_final, velo_val);
+                    particleList.add(newParticle);
+                    PARTICLE_FRAME.repaint();
+                }
 
             } catch (NumberFormatException num) {
                 JOptionPane.showMessageDialog(this, "Invalid input format!");
@@ -549,10 +560,14 @@ public class MainInterface extends JFrame {
 
                 System.out.printf("\n" + "Spec 3 Check: %d , %d , %d , %f , %f , %f", num_part, x_part, y_part, velo_start, velo_end, theta_val);
                 
-                // Create a new Particle object with the retrieved values
-                //Particle newParticle = new Particle(x_part, y_part, velo_val, theta_val);
-                //particles.add(newParticle);
-                //PARTICLE_FRAME.repaint();
+                double veloIncrement = (velo_end - velo_start) / (num_part - 1);
+
+                for (int i = 0; i < num_part; i++) {
+                    double velo_final = velo_start + (veloIncrement * i);
+                    Particle newParticle = new Particle(x_part, y_part, theta_val, velo_final);
+                    particleList.add(newParticle);
+                    PARTICLE_FRAME.repaint();
+                }
 
             } catch (NumberFormatException num) {
                 JOptionPane.showMessageDialog(this, "Invalid input format!");
