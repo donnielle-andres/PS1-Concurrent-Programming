@@ -76,12 +76,27 @@ public class MainInterface extends JFrame {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
 
-                // Draw particles
-                for (Particle particle : particleList){
-                    particle.draw(g);
+                int numThreads = Runtime.getRuntime().availableProcessors(); // Get number of available processors
+
+                ConcurrentLinkedQueue<Particle> particleQueue = new ConcurrentLinkedQueue<>(particleList); // Create a concurrent queue
+
+                // Create and start rendering threads
+                Thread[] renderingThreads = new Thread[numThreads];
+                for (int i = 0; i < numThreads; i++) {
+                    renderingThreads[i] = new Thread(() -> renderParticles(particleQueue, g));
+                    renderingThreads[i].start();
                 }
 
-                // Draw wall
+                // Wait for all rendering threads to finish
+                try {
+                    for (Thread thread : renderingThreads) {
+                        thread.join();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                // Draw walls
                 for (Wall wall : wallList) {
                     wall.draw(g);
                 }
@@ -703,6 +718,13 @@ public class MainInterface extends JFrame {
             particle.updatePosition(deltaTime);
             particle.partCollision(wallList);
         })).join();
+    }
+
+    private void renderParticles(ConcurrentLinkedQueue<Particle> particleQueue, Graphics g) {
+        Particle particle;
+        while ((particle = particleQueue.poll()) != null) { // Poll particles from the queue until empty
+            particle.draw(g);
+        }
     }
 
 }
