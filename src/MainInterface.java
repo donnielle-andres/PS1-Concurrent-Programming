@@ -68,7 +68,7 @@ public class MainInterface extends JFrame {
         setTitle("STDISCM PARTICLE SIMULATOR");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
-        setResizable(false);
+        setResizable(true);
 
         // PARTICLE FRAME
         PARTICLE_FRAME = new JPanel(){
@@ -205,43 +205,55 @@ public class MainInterface extends JFrame {
                     int y_part = Integer.parseInt(y_particle.getText());
                     double velo_val = Double.parseDouble(velocity.getText());
                     double theta_val = Double.parseDouble(theta.getText());
-
-                    System.out.printf("InitSpec %d , %d , %f , %f ", x_part, y_part, velo_val, theta_val);
-                    
-
+            
+                    // Check canvas boundaries
+                    if (x_part < 0 || x_part >= PARTFRAME_WIDTH || y_part < 0 || y_part >= PARTFRAME_HEIGHT) {
+                        throw new IllegalArgumentException("Particle position must be within canvas boundaries (1280x720)!");
+                    }
+            
+                    // Check theta range
+                    if (theta_val < 0 || theta_val > 360) {
+                        throw new IllegalArgumentException("Theta angle must be between 1 and 360 degrees!");
+                    }
+            
                     // Create a new Particle object with the retrieved values
                     Particle newParticle = new Particle(x_part, y_part, velo_val, theta_val);
                     particleList.add(newParticle);
                     PARTICLE_FRAME.repaint();
-
+            
                 } catch (NumberFormatException num) {
                     JOptionPane.showMessageDialog(this, "Invalid input format!");
-
+                } catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
                 }
-                            
             });
-
-            // WALL
+            
+        // WALL
             addWall.addActionListener(e -> {
                 try {
                     int sw_X = Integer.parseInt(X_startwall.getText());
                     int sw_Y = Integer.parseInt(Y_startwall.getText());
                     int ew_X = Integer.parseInt(X_endwall.getText());
                     int ew_Y = Integer.parseInt(Y_endwall.getText());
-
-                    System.out.printf("\n" + "Wall %d , %d , %d , %d", sw_X, sw_Y, ew_X, ew_Y);
-                    
+            
+                    // Check canvas boundaries
+                    if ((sw_X < 0 || sw_X >= PARTFRAME_WIDTH || sw_Y < 0 || sw_Y >= PARTFRAME_HEIGHT) ||
+                        (ew_X < 0 || ew_X >= PARTFRAME_WIDTH || ew_Y < 0 || ew_Y >= PARTFRAME_HEIGHT)) {
+                        throw new IllegalArgumentException("Wall coordinates must be within canvas boundaries (1280x720)!");
+                    }
+            
                     // Create a new Wall object with the retrieved values
                     Wall newWall = new Wall(sw_X, sw_Y, ew_X, ew_Y);
                     wallList.add(newWall);
                     PARTICLE_FRAME.repaint();
-
+            
                 } catch (NumberFormatException num) {
                     JOptionPane.showMessageDialog(this, "Invalid input format!");
-
+                } catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
                 }
-                            
             });
+        
 
             
 
@@ -345,27 +357,38 @@ public class MainInterface extends JFrame {
                 int ep_Y = Integer.parseInt(Y_ep.getText());
                 double velo_val = Double.parseDouble(velocity.getText());
                 double theta_val = Double.parseDouble(theta.getText());
-
-                System.out.printf( "\n" + "Spec 1 Check: %d , %d , %d , %d , %d , %f , %f ", num_part, sp_X, sp_Y, ep_X, ep_Y, velo_val, theta_val);
-
-                if (num_part > 0) {
-                    for (int i = 0; i < num_part; i++) {
-                        double ratio = (double) i / (num_part - 1);
-                        int x = sp_X + (int) ((ep_X - sp_X) * ratio);
-                        int y = sp_Y + (int) ((ep_Y - sp_Y) * ratio);
-                        Particle newParticle = (new Particle(x, y, theta_val, velo_val));
-                        particleList.add(newParticle);
-                        PARTICLE_FRAME.repaint();
-                    }
+        
+                // Check canvas boundaries for start and end points
+                if ((sp_X < 0 || sp_X >= PARTFRAME_WIDTH || sp_Y < 0 || sp_Y >= PARTFRAME_HEIGHT) ||
+                    (ep_X < 0 || ep_X >= PARTFRAME_WIDTH || ep_Y < 0 || ep_Y >= PARTFRAME_HEIGHT)) {
+                    throw new IllegalArgumentException("Start and end points must be within canvas boundaries (1280x720)!");
                 }
-
-
+        
+                // Check theta range
+                if (theta_val < 0 || theta_val > 360) {
+                    throw new IllegalArgumentException("Theta angle must be between 1 and 360 degrees!");
+                }
+        
+                // Check if number of particles is positive
+                if (num_part <= 0) {
+                    throw new IllegalArgumentException("Number of particles must be positive!");
+                }
+        
+                for (int i = 0; i < num_part; i++) {
+                    double ratio = (double) i / (num_part - 1);
+                    int x = sp_X + (int) ((ep_X - sp_X) * ratio);
+                    int y = sp_Y + (int) ((ep_Y - sp_Y) * ratio);
+                    Particle newParticle = (new Particle(x, y, theta_val, velo_val));
+                    particleList.add(newParticle);
+                    PARTICLE_FRAME.repaint();
+                }
+        
             } catch (NumberFormatException num) {
                 JOptionPane.showMessageDialog(this, "Invalid input format!");
-
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
             }
-                        
-        });
+        });        
     
         return tabPanel;
     }
@@ -452,24 +475,38 @@ public class MainInterface extends JFrame {
                 double theta_start = Double.parseDouble(start_theta.getText());
                 double theta_end = Double.parseDouble(end_theta.getText());
                 double velo_val = Double.parseDouble(velocity.getText());
-
-                System.out.printf("\n" + "Spec 2 Check: %d , %d , %d , %f , %f , %f", num_part, x_part, y_part, theta_start, theta_end, velo_val);
-
+        
+                // Check if x and y coordinates are within canvas width and height
+                if (x_part < 0 || x_part > PARTFRAME_WIDTH || y_part < 0 || y_part > PARTFRAME_HEIGHT) {
+                    throw new IllegalArgumentException("Coordinates (x, y) must be within the canvas bounds (1280x720)!");
+                }
+        
+                // Check theta range
+                if (theta_start < 0 || theta_start > 360 || theta_end < 0 || theta_end > 360) {
+                    throw new IllegalArgumentException("Theta angles must be between 1 and 360 degrees!");
+                }
+        
+                // Check if number of particles is positive
+                if (num_part <= 0) {
+                    throw new IllegalArgumentException("Number of particles must be positive!");
+                }
+        
                 double angleIncrement = (theta_end - theta_start) / (num_part - 1);
-
+        
                 for (int i = 0; i < num_part; i++) {
                     double theta_final = theta_start + (angleIncrement * i);
                     Particle newParticle = new Particle(x_part, y_part, theta_final, velo_val);
                     particleList.add(newParticle);
                     PARTICLE_FRAME.repaint();
                 }
-
+        
             } catch (NumberFormatException num) {
                 JOptionPane.showMessageDialog(this, "Invalid input format!");
-
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
             }
-                        
         });
+        
     
         return tabPanel;
     }
@@ -557,24 +594,43 @@ public class MainInterface extends JFrame {
                 double velo_start = Double.parseDouble(start_velocity.getText());
                 double velo_end = Double.parseDouble(end_velocity.getText());
                 double theta_val = Double.parseDouble(theta.getText());
-
-                System.out.printf("\n" + "Spec 3 Check: %d , %d , %d , %f , %f , %f", num_part, x_part, y_part, velo_start, velo_end, theta_val);
-                
+        
+                // Check if x and y coordinates are within canvas width and height
+                if (x_part < 0 || x_part > PARTFRAME_WIDTH || y_part < 0 || y_part > PARTFRAME_HEIGHT) {
+                    throw new IllegalArgumentException("Coordinates (x, y) must be within the canvas bounds (1280x720)!");
+                }
+        
+                // Check velocity range
+                if (velo_start < 0 || velo_end < 0 || velo_start > velo_end) {
+                    throw new IllegalArgumentException("Velocity values must be positive and Start Velocity must be less than End Velocity!");
+                }
+        
+                // Check theta range
+                if (theta_val < 0 || theta_val > 360) {
+                    throw new IllegalArgumentException("Theta angle must be between 1 and 360 degrees!");
+                }
+        
+                // Check if number of particles is positive
+                if (num_part <= 0) {
+                    throw new IllegalArgumentException("Number of particles must be positive!");
+                }
+        
                 double veloIncrement = (velo_end - velo_start) / (num_part - 1);
-
+        
                 for (int i = 0; i < num_part; i++) {
                     double velo_final = velo_start + (veloIncrement * i);
                     Particle newParticle = new Particle(x_part, y_part, theta_val, velo_final);
                     particleList.add(newParticle);
                     PARTICLE_FRAME.repaint();
                 }
-
+        
             } catch (NumberFormatException num) {
                 JOptionPane.showMessageDialog(this, "Invalid input format!");
-
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
             }
-                        
         });
+        
     
         return tabPanel;
     }
