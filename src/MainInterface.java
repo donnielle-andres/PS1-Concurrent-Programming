@@ -14,7 +14,7 @@ public class MainInterface extends JFrame {
 
     //WINDOW SIZE
     private int WINDOW_WIDTH = 1580;
-    private int WINDOW_HEIGHT = 720;
+    private int WINDOW_HEIGHT = 760;
 
     //FRAMES
     private JPanel PARTICLE_FRAME;
@@ -68,7 +68,7 @@ public class MainInterface extends JFrame {
         setTitle("STDISCM PARTICLE SIMULATOR");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
-        setResizable(true);
+        setResizable(false);
 
         // PARTICLE FRAME
         PARTICLE_FRAME = new JPanel(){
@@ -208,6 +208,7 @@ public class MainInterface extends JFrame {
 
                     System.out.printf("InitSpec %d , %d , %f , %f ", x_part, y_part, velo_val, theta_val);
                     
+
                     // Create a new Particle object with the retrieved values
                     Particle newParticle = new Particle(x_part, y_part, velo_val, theta_val);
                     particleList.add(newParticle);

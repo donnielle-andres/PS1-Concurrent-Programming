@@ -203,26 +203,23 @@ public class Particle {
 
 // check the wall bounce of the particles
     private void checkParticleBounce(Wall wall) {
-        // Calculate incident vector components
+        // Calculate the incident vector components
         double incidentX = Math.cos(Math.toRadians(theta));
         double incidentY = Math.sin(Math.toRadians(theta));
 
         // Calculate wall's normal vector
         double wallDx = wall.endWall.x - wall.startWall.x;
         double wallDy = wall.endWall.y - wall.startWall.y;
-        // Rotate 90 degrees to get the normal: (dy, -dx)
-        double normalX = wallDy;
-        double normalY = -wallDx;
 
-        // Normalize the normal vector
-        double normalLength = Math.sqrt(normalX * normalX + normalY * normalY);
-        normalX /= normalLength;
-        normalY /= normalLength;
+        // Calculate normal vector (perpendicular to the wall)
+        double length = Math.sqrt(wallDx * wallDx + wallDy * wallDy);
+        double normalX = -wallDy / length;
+        double normalY = wallDx / length;
 
-        // Calculate dot product between incident vector and normal vector
+        // Correctly calculate the dot product between the incident vector and the wall's normal vector
         double dotProduct = incidentX * normalX + incidentY * normalY;
 
-        // Reflect the incident vector off the wall's normal vector
+        // Reflect the incident vector off the wall's normal vector using the correct reflection formula
         double reflectX = incidentX - 2 * dotProduct * normalX;
         double reflectY = incidentY - 2 * dotProduct * normalY;
 
@@ -230,6 +227,12 @@ public class Particle {
         theta = Math.toDegrees(Math.atan2(reflectY, reflectX));
 
         // Ensure the angle is normalized to the range [0, 360)
-        theta = (theta + 360) % 360;
+        if (theta < 0) {
+            theta += 360;
+        } else if (theta >= 360) {
+            theta -= 360;
+        }
     }
+
+
 }
