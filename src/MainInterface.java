@@ -353,7 +353,7 @@ public class MainInterface extends JFrame {
                         double ratio = (double) i / (num_part - 1);
                         int x = sp_X + (int) ((ep_X - sp_X) * ratio);
                         int y = sp_Y + (int) ((ep_Y - sp_Y) * ratio);
-                        Particle newParticle = (new Particle(x, y, theta_val, velo_val));
+                        Particle newParticle = (new Particle(x, y, velo_val, theta_val));
                         particleList.add(newParticle);
                         PARTICLE_FRAME.repaint();
                     }
@@ -459,7 +459,7 @@ public class MainInterface extends JFrame {
 
                 for (int i = 0; i < num_part; i++) {
                     double theta_final = theta_start + (angleIncrement * i);
-                    Particle newParticle = new Particle(x_part, y_part, theta_final, velo_val);
+                    Particle newParticle = new Particle(x_part, y_part, velo_val, theta_final);
                     particleList.add(newParticle);
                     PARTICLE_FRAME.repaint();
                 }
@@ -564,7 +564,7 @@ public class MainInterface extends JFrame {
 
                 for (int i = 0; i < num_part; i++) {
                     double velo_final = velo_start + (veloIncrement * i);
-                    Particle newParticle = new Particle(x_part, y_part, theta_val, velo_final);
+                    Particle newParticle = new Particle(x_part, y_part, velo_final, theta_val);
                     particleList.add(newParticle);
                     PARTICLE_FRAME.repaint();
                 }
