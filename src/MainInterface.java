@@ -101,7 +101,6 @@ public class MainInterface extends JFrame {
         fps_label.setHorizontalAlignment(SwingConstants.LEFT);
         PARTICLE_FRAME.setLayout(null); 
         PARTICLE_FRAME.add(fps_label);
-        new Thread(this::fpsCounter).start();
 
         // INPUT FRAME
         INPUT_FRAME = new JPanel(new BorderLayout());
@@ -670,11 +669,21 @@ public class MainInterface extends JFrame {
     }
 
     public void runSimulation() {
+
         new Thread(() -> {
+            int frames = 0;
+            long last_time = System.currentTimeMillis();
             while (true) {
+                frames++;
                 long startTime = System.nanoTime();
                 processParticles(Particle_Simulator.TIME_STEP); // Update particle physics
                 SwingUtilities.invokeLater(this::repaint); // Repaint the canvas
+                if (System.currentTimeMillis() - last_time >= 1000) {
+                    last_time += 1000;
+                    int finalFrames = frames;
+                    SwingUtilities.invokeLater(() -> fps_label.setText("FPS: " + finalFrames));
+                    frames = 0;
+                }
 
                 try {
                     long sleepTime = (Particle_Simulator.OPTIMAL_TIME - (System.nanoTime() - startTime)) / 1000000;
