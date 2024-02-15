@@ -68,7 +68,7 @@ public class MainInterface extends JFrame {
         setTitle("STDISCM PARTICLE SIMULATOR");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
-        setResizable(false);
+        setResizable(true);
 
         // PARTICLE FRAME
         PARTICLE_FRAME = new JPanel(){
@@ -105,16 +105,16 @@ public class MainInterface extends JFrame {
 
         // INPUT FRAME
         INPUT_FRAME = new JPanel(new BorderLayout());
-        INPUT_FRAME.setPreferredSize(new Dimension(300, 720));
+        INPUT_FRAME.setPreferredSize(new Dimension(280, 720));
         INPUT_FRAME.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createTitledBorder("PARTICLE SPECIFICATIONS"), 
-            BorderFactory.createEmptyBorder(10, 10, 10, 10)));
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
         
 
         // INPUTS FOR INITIAL SPECS
         JPanel particlePanel = new JPanel(new BorderLayout());
-        particlePanel.setPreferredSize(new Dimension(300, 200));
+        particlePanel.setPreferredSize(new Dimension(280, 200));
         particlePanel.setBorder(BorderFactory.createTitledBorder("PARTICLES"));
 
         JPanel initialSpec = new JPanel(new GridLayout(0, 2, 2, 2));
@@ -254,7 +254,7 @@ public class MainInterface extends JFrame {
         gbcTab.gridx = 0;
         gbcTab.gridy = 0;
         gbcTab.anchor = GridBagConstraints.WEST;
-        gbcTab.insets = new Insets(5, 5, 5, 5);
+        
     
         // Number of Particles
         numpart_label = new JLabel("Number of Particles:");
@@ -332,7 +332,7 @@ public class MainInterface extends JFrame {
         tabPanel.add(addSpec1, gbcTab);
     
         // Adjust the size of the tabPanel to fit its content
-        tabPanel.setPreferredSize(new Dimension(300, 350));
+        tabPanel.setPreferredSize(new Dimension(280, 300));
 
         // ACTION LISTENER - SPEC 1
         addSpec1.addActionListener(e -> {
@@ -375,7 +375,6 @@ public class MainInterface extends JFrame {
         gbcTab.gridx = 0;
         gbcTab.gridy = 0;
         gbcTab.anchor = GridBagConstraints.WEST;
-        gbcTab.insets = new Insets(5, 5, 5, 5);
     
         // Number of Particles
         numpart_label = new JLabel("Number of Particles:");
@@ -441,7 +440,7 @@ public class MainInterface extends JFrame {
         tabPanel.add(addSpec2, gbcTab);
     
         // Adjust the size of the tabPanel to fit its content
-        tabPanel.setPreferredSize(new Dimension(300, 350));
+        tabPanel.setPreferredSize(new Dimension(280, 300));
 
         // ACTION LISTENER - SPEC 2
         addSpec2.addActionListener(e -> {
@@ -480,7 +479,7 @@ public class MainInterface extends JFrame {
         gbcTab.gridx = 0;
         gbcTab.gridy = 0;
         gbcTab.anchor = GridBagConstraints.WEST;
-        gbcTab.insets = new Insets(5, 5, 5, 5);
+
     
         // Number of Particles
         numpart_label = new JLabel("Number of Particles:");
@@ -546,7 +545,7 @@ public class MainInterface extends JFrame {
         tabPanel.add(addSpec3, gbcTab);
     
         // Adjust the size of the tabPanel to fit its content
-        tabPanel.setPreferredSize(new Dimension(300, 350));
+        tabPanel.setPreferredSize(new Dimension(280, 300));
 
         // ACTION LISTENER - SPEC 3
         addSpec3.addActionListener(e -> {
@@ -635,7 +634,7 @@ public class MainInterface extends JFrame {
     private void processParticles(double deltaTime) {
         taskThread.submit(() -> particleList.parallelStream().forEach(particle -> {
             particle.updatePosition(deltaTime);
-            particle.partCollision(PARTFRAME_WIDTH, PARTFRAME_HEIGHT, wallList);
+            particle.partCollision(wallList);
         })).join();
     }
 

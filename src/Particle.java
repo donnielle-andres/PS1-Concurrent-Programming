@@ -3,7 +3,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 public class Particle {
-    private static final int particleSize = 3, PARTFRAME_WIDTH = 1280, PARTFRAME_HEIGHT = 720;
+    private static final int particleSize = 5, PARTFRAME_WIDTH = 1280, PARTFRAME_HEIGHT = 720;
 
     public Point position;
 
@@ -69,7 +69,25 @@ public class Particle {
 
 
 // Wall Collision - Handle Wall Collision
-    public void partCollision(int PARTFRAME_WIDTH, int PARTFRAME_HEIGHT, ArrayList<Wall> walls) {
+
+    public void partCollision(ArrayList<Wall> walls) {
+        // Handle wall collisions
+        for (Wall wall : walls) {
+            if (wallCollision(wall)) {
+                checkParticleBounce(wall);
+            }
+        }
+
+        // Handle frame collisions
+        handleHorizontalCollision();
+        handleVerticalCollision();
+        
+        // Normalize angle
+        normalizeAngle();
+        System.out.printf("\n Particle partCollision: %d , %d ", position.x, position.y);
+    }
+    
+    /* public void partCollision(int PARTFRAME_WIDTH, int PARTFRAME_HEIGHT, ArrayList<Wall> walls) {
         int buffer = 1; // A small buffer to prevent sticking to the wall
 
         handleHorizontalCollision(PARTFRAME_WIDTH, particleSize, buffer);
@@ -85,6 +103,7 @@ public class Particle {
         System.out.printf("\n Particle partCollision: %d , %d ", position.x, position.y);
     }
 
+    
     private void handleHorizontalCollision(int PARTFRAME_WIDTH, int particleSize, int buffer) {
         if (position.x <= 0) {
             theta = 180 - theta;
@@ -96,6 +115,30 @@ public class Particle {
     }
 
     private void handleVerticalCollision(int PARTFRAME_HEIGHT, int particleSize, int buffer) {
+        if (position.y + particleSize >= PARTFRAME_HEIGHT) {
+            theta = -theta;
+            position.y = PARTFRAME_HEIGHT - particleSize - buffer;
+        } else if (position.y <= 0) {
+            theta = -theta;
+            position.y = buffer;
+        }
+    }*/
+
+    private void handleHorizontalCollision() {
+        int buffer = 1; // A small buffer to prevent sticking to the wall
+    
+        if (position.x <= 0) {
+            theta = 180 - theta;
+            position.x = buffer; // Move particle slightly inside to prevent sticking
+        } else if (position.x + particleSize >= PARTFRAME_WIDTH) {
+            theta = 180 - theta;
+            position.x = PARTFRAME_WIDTH - particleSize - buffer;
+        }
+    }
+    
+    private void handleVerticalCollision() {
+        int buffer = 1; // A small buffer to prevent sticking to the wall
+    
         if (position.y + particleSize >= PARTFRAME_HEIGHT) {
             theta = -theta;
             position.y = PARTFRAME_HEIGHT - particleSize - buffer;
@@ -144,14 +187,14 @@ public class Particle {
 
     private boolean hasIntersection(double currX, double currY, double nextPosiX, double nextPosiY, double X_sw, double Y_sw, double X_ew, double Y_ew) {
         // Calculate denominators for the line intersection formula
-        double inter = (currX - nextPosiY) * (Y_sw - Y_ew) - (currY - nextPosiY) * (X_sw - X_ew);
+        double inter = (currX - nextPosiX) * (Y_sw - Y_ew) - (currY - nextPosiY) * (X_sw - X_ew);
         if (inter == 0) {
             return false; // Lines are parallel, no intersection
         }
 
         // Calculate the intersection point (u and t are the line scalar values)
         double scalar1 = ((currX - X_sw) * (Y_sw - Y_ew) - (currY - Y_sw) * (X_sw - X_ew)) / inter;
-        double scalar2 = ((nextPosiY - currX) * (currY - Y_sw) - (nextPosiY - currY) * (currX - X_sw)) / inter;
+        double scalar2 = ((nextPosiX - currX) * (currY - Y_sw) - (nextPosiY - currY) * (currX - X_sw)) / inter;
 
         // Check if there is an intersection within the line segments
         return scalar1 >= 0 && scalar1 <= 1 && scalar2 >= 0 && scalar2 <= 1;
