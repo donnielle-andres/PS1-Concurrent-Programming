@@ -613,37 +613,30 @@ public class MainInterface extends JFrame {
     }
 
     public void runSimulation() {
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(() -> {
-            long startTime = System.nanoTime();
-            processParticles(Particle_Simulator.TIME_STEP); // Update particle physics
-            SwingUtilities.invokeLater(this::repaint); // Repaint the canvas
-    
-            long elapsedTime = System.nanoTime() - startTime;
-            long sleepTime = Math.max(0, Particle_Simulator.OPTIMAL_TIME - elapsedTime) / 1_000_000; // Convert nanoseconds to milliseconds
-    
-            try {
-                Thread.sleep(sleepTime);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }, 0, Particle_Simulator.OPTIMAL_TIME, TimeUnit.MILLISECONDS);
-    }
+        new Thread(() -> {
+            while (true) {
+                long startTime = System.nanoTime();
+                processParticles(Particle_Simulator.TIME_STEP); // Update particle physics
+                SwingUtilities.invokeLater(this::repaint); // Repaint the canvas
 
+                try {
+                    long sleepTime = (Particle_Simulator.OPTIMAL_TIME - (System.nanoTime() - startTime)) / 1000000;
+                    if (sleepTime > 0) {
+                        Thread.sleep(sleepTime);
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }).start();
+    }
+    
 
     private void processParticles(double deltaTime) {
-        ExecutorService executor = Executors.newCachedThreadPool();
-        for (Particle particle : particleList) {
-            executor.submit(() -> {
-                particle.updatePosition(deltaTime);
-                particle.partCollision(PARTFRAME_WIDTH, PARTFRAME_HEIGHT, wallList);
-            });
-        }
-        executor.shutdown();
+        taskThread.submit(() -> particleList.parallelStream().forEach(particle -> {
+            particle.updatePosition(deltaTime);
+            particle.partCollision(PARTFRAME_WIDTH, PARTFRAME_HEIGHT, wallList);
+        })).join();
     }
-
-
-
-
 
 }

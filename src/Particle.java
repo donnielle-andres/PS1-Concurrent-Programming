@@ -15,8 +15,8 @@ public class Particle {
     double moveY = 0.0;
 
     public Particle(int x, int y, double velocity, double theta){
-        this.x_part = x;
-        this.y_part = y;
+        //this.x_part = x;
+        //this.y_part = y;
         this.position = new Point (x, y);
         this.theta = theta;
         this.velocity = velocity;
@@ -27,8 +27,10 @@ public class Particle {
     }
 
     public void draw(Graphics graphics){
+        int y_part = PARTFRAME_HEIGHT - position.y - 40;
         graphics.setColor(color);
-        graphics.fillRect(x_part, y_part, particleSize, particleSize);
+        graphics.fillOval(position.x, y_part, particleSize, particleSize);
+        System.out.printf("\n Particle Position: %d , %d ", position.x, y_part);
     }
 
 // Update Particle Position
@@ -80,6 +82,7 @@ public class Particle {
             }
         }
         normalizeAngle();
+        System.out.printf("\n Particle partCollision: %d , %d ", position.x, position.y);
     }
 
     private void handleHorizontalCollision(int PARTFRAME_WIDTH, int particleSize, int buffer) {
@@ -192,24 +195,24 @@ public class Particle {
 
     // Initial Spec
     public void move(ArrayList<Wall> wallList){
-        x_part = (int)(x_part + velocity * Math.cos(theta));
-        y_part = (int)(y_part + velocity * Math.cos(theta));
-
-        //wall collision
+        // Calculate the next position based on velocity and angle
+        int nextX = (int)(position.x + velocity * Math.cos(Math.toRadians(theta)));
+        int nextY = (int)(position.y + velocity * Math.sin(Math.toRadians(theta)));
+    
+        // Check for collision with walls
         for(Wall wall: wallList){
-
+            if (wallCollision(wall)) {
+                // Handle collision with the wall
+                checkParticleBounce(wall);
+            }
         }
-
-        if (x_part <= 0 || x_part >= PARTFRAME_WIDTH) {
-            theta = Math.PI - theta;
-            x_part = Math.max(0, Math.min(x_part, PARTFRAME_WIDTH));
-        }
-        if (y_part <= 0 || y_part >= PARTFRAME_HEIGHT) {
-            theta = -theta;
-            y_part = Math.max(0, Math.min(y_part, PARTFRAME_HEIGHT));
-        }
+    
+        // Update particle position
+        position.setLocation(nextX, nextY);
+        System.out.printf("\n Particle Move: %d , %d ", nextX, nextY);
 
     }
+    
 
     
 
