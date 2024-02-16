@@ -3,13 +3,9 @@ import java.util.*;
 
 public class Particle {
     private static final int particleSize = 3, PARTFRAME_WIDTH = 1280, PARTFRAME_HEIGHT = 720;
-
     public Point position;
-
-    private int x_part, y_part;
     private double theta, velocity;
     private Color color;
-
     double moveX = 0.0;
     double moveY = 0.0;
 
@@ -126,7 +122,7 @@ public class Particle {
         double currY = position.y;
 
         // Predicted next position based on current velocity and angle
-        double moveTime = 1 / 60.0; // Assuming frame rate of 60 FPS for deltaTime
+        double moveTime = 1 / 60.0; 
         double[] nextPosition = getNextPosition(currX, currY, moveTime);
 
         // Wall start and end points
@@ -139,12 +135,12 @@ public class Particle {
         return hasIntersection(currX, currY, nextPosition[0], nextPosition[1], X_sw, Y_sw, X_ew, Y_ew);
     }
 
-    private double[] getNextPosition(double x, double y, double deltaTime) {
+    private double[] getNextPosition(double x, double y, double moveTime) {
         double angleRadians = Math.toRadians(theta);
         double velocityX = velocity * Math.cos(angleRadians);
         double velocityY = velocity * Math.sin(angleRadians);
-        double nextX = x + velocityX * deltaTime;
-        double nextY = y + velocityY * deltaTime;
+        double nextX = x + velocityX * moveTime;
+        double nextY = y + velocityY * moveTime;
         return new double[]{nextX, nextY};
     }
 
@@ -170,32 +166,24 @@ public class Particle {
         double incidentX = Math.cos(Math.toRadians(theta));
         double incidentY = Math.sin(Math.toRadians(theta));
 
-        // Calculate wall's normal vector
         double wallDx = wall.endWall.x - wall.startWall.x;
         double wallDy = wall.endWall.y - wall.startWall.y;
 
-        // Calculate normal vector (perpendicular to the wall)
-        double length = Math.sqrt(wallDx * wallDx + wallDy * wallDy);
+
+        double length = Math.hypot(wallDx, wallDy);
         double normalX = -wallDy / length;
         double normalY = wallDx / length;
 
-        // Correctly calculate the dot product between the incident vector and the wall's normal vector
+        // Calculate the dot product between the incident vector and the wall's normal vector
         double dotProduct = incidentX * normalX + incidentY * normalY;
 
-        // Reflect the incident vector off the wall's normal vector using the correct reflection formula
         double reflectX = incidentX - 2 * dotProduct * normalX;
         double reflectY = incidentY - 2 * dotProduct * normalY;
 
         // Convert the reflected vector back to an angle
         theta = Math.toDegrees(Math.atan2(reflectY, reflectX));
 
-        // Ensure the angle is normalized to the range [0, 360)
-        if (theta < 0) {
-            theta += 360;
-        } else if (theta >= 360) {
-            theta -= 360;
-        }
+        theta = (theta + 360) % 360;
     }
-
 
 }

@@ -8,12 +8,7 @@ public class MainInterface extends JFrame {
 
     private ArrayList<Particle> particleList = new ArrayList<Particle>();
     private ArrayList<Wall> wallList = new ArrayList<Wall>();
-    private final ForkJoinPool taskThread= new ForkJoinPool(); // physicsThreadPool
-    private final ForkJoinPool renderThread = new ForkJoinPool();
-
-    //WINDOW SIZE
-    private int WINDOW_WIDTH = 1560;
-    private int WINDOW_HEIGHT = 700;
+    private final ForkJoinPool taskThread= new ForkJoinPool();
 
     //FPS VARIABLES
     private int frameCtr = 0;
