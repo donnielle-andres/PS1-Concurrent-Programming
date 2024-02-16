@@ -13,6 +13,9 @@ public class MainInterface extends JFrame {
     //FPS VARIABLES
     private int frameCtr = 0;
     private long lastFpsUpdateTime = System.nanoTime();
+    public static final double TIME_STEP = 1.0 / 240.0;
+    public static final int TARGET_FPS = 60;
+    public static final long OPTIMAL_TIME = 1000000000 / TARGET_FPS;
 
     //FRAMES
     private JPanel PARTICLE_FRAME;
@@ -62,6 +65,7 @@ public class MainInterface extends JFrame {
     
 
     public MainInterface(){
+        setSize(1560, 720);
         setTitle("STDISCM PARTICLE SIMULATOR");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -115,7 +119,7 @@ public class MainInterface extends JFrame {
 
         // INPUT FRAME
         INPUT_FRAME = new JPanel(new BorderLayout());
-        INPUT_FRAME.setPreferredSize(new Dimension(280, PARTFRAME_HEIGHT)); // Set height to match PARTICLE_FRAME
+        INPUT_FRAME.setPreferredSize(new Dimension(260, PARTFRAME_HEIGHT)); // Set height to match PARTICLE_FRAME
         INPUT_FRAME.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createTitledBorder("PARTICLE SPECIFICATIONS"),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5)));
@@ -144,7 +148,7 @@ public class MainInterface extends JFrame {
             initialSpec.add(theta_label);
             initialSpec.add(theta);
 
-            addSpec = new JButton("ADD PARTICLE");
+            addSpec = new JButton("Add Particle");
             addSpec.setPreferredSize(new Dimension(100, 20));
             initialSpec.add(addSpec);
 
@@ -171,27 +175,27 @@ public class MainInterface extends JFrame {
 
         // WALL
         JPanel wallSpec = new JPanel(new GridLayout(0, 2, 2, 2));
-            X_startwall_label= new JLabel("Wall Start X (Max: 1280):");
+            X_startwall_label= new JLabel("Wall Start X:");
             X_startwall = new JTextField(20);
             wallSpec.add(X_startwall_label);
             wallSpec.add(X_startwall);
 
-            Y_startwall_label= new JLabel("Wall Start Y (Max: 720):");
+            Y_startwall_label= new JLabel("Wall Start Y:");
             Y_startwall = new JTextField(20);
             wallSpec.add(Y_startwall_label);
             wallSpec.add(Y_startwall);
 
-            X_endwall_label= new JLabel("Wall End X (Max: 1280):");
+            X_endwall_label= new JLabel("Wall End X:");
             X_endwall = new JTextField(20);
             wallSpec.add(X_endwall_label);
             wallSpec.add(X_endwall);
 
-            Y_endwall_label= new JLabel("Wall End Y (Max: 720):");
+            Y_endwall_label= new JLabel("Wall End Y :");
             Y_endwall = new JTextField(20);
             wallSpec.add(Y_endwall_label);
             wallSpec.add(Y_endwall);
 
-            addWall = new JButton("ADD WALL");
+            addWall = new JButton("Add Wall");
             addWall.setPreferredSize(new Dimension(100, 20));
             wallSpec.add(addWall);
 
@@ -649,13 +653,13 @@ public class MainInterface extends JFrame {
             while (true) {
 
                 long startTime = System.nanoTime();
-                processParticles(Particle_Simulator.TIME_STEP); // Update particle physics
+                processParticles(TIME_STEP); // Update particle physics
 
                 // Submit repaint task to the executor
                 executorPaint.execute(this::repaint); // Repaint the canvas
 
                 try {
-                    long sleepTime = (Particle_Simulator.OPTIMAL_TIME - (System.nanoTime() - startTime)) / 1000000;
+                    long sleepTime = (OPTIMAL_TIME - (System.nanoTime() - startTime)) / 1000000;
                     if (sleepTime > 0) {
                         Thread.sleep(sleepTime);
                     }
