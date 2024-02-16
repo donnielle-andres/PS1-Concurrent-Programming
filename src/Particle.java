@@ -2,7 +2,7 @@ import java.awt.*;
 import java.util.*;
 
 public class Particle {
-    private static final int particleSize = 10, PARTFRAME_WIDTH = 1280, PARTFRAME_HEIGHT = 720;
+    private static final int particleSize = 3, PARTFRAME_WIDTH = 1280, PARTFRAME_HEIGHT = 720;
 
     public Point position;
 
