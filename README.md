@@ -1,7 +1,6 @@
 # PS1-Concurrent-Programming: PARTICLE SIMULATOR
-## ANDRES, Donnielle A.
-## LIMJOCO, Jared Ethan
-## STDISCM - S11
+ANDRES, Donnielle A. &  LIMJOCO, Jared Ethan
+STDISCM - S11
 
 ### Run JAR File
 Click the "PS1-Concurrent Programming.jar" to run the executable jar file
