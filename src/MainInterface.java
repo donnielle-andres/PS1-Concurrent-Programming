@@ -171,22 +171,22 @@ public class MainInterface extends JFrame {
 
         // WALL
         JPanel wallSpec = new JPanel(new GridLayout(0, 2, 2, 2));
-            X_startwall_label= new JLabel("Wall Start Point X (Max: 1280):");
+            X_startwall_label= new JLabel("Wall Start X (Max: 1280):");
             X_startwall = new JTextField(20);
             wallSpec.add(X_startwall_label);
             wallSpec.add(X_startwall);
 
-            Y_startwall_label= new JLabel("Wall Start Point Y (Max: 720):");
+            Y_startwall_label= new JLabel("Wall Start Y (Max: 720):");
             Y_startwall = new JTextField(20);
             wallSpec.add(Y_startwall_label);
             wallSpec.add(Y_startwall);
 
-            X_endwall_label= new JLabel("Wall End Point X (Max: 1280):");
+            X_endwall_label= new JLabel("Wall End X (Max: 1280):");
             X_endwall = new JTextField(20);
             wallSpec.add(X_endwall_label);
             wallSpec.add(X_endwall);
 
-            Y_endwall_label= new JLabel("Wall End Point Y (Max: 720):");
+            Y_endwall_label= new JLabel("Wall End Y (Max: 720):");
             Y_endwall = new JTextField(20);
             wallSpec.add(Y_endwall_label);
             wallSpec.add(Y_endwall);
