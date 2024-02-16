@@ -647,14 +647,6 @@ public class MainInterface extends JFrame {
         return tabPanel;
     }
 
-    public void addParticle(Particle particle) {
-        particleList.add(particle);
-    }
-
-    public void addWall(Wall wall) {
-        wallList.add(wall);
-    }
-
     public void runSimulation() {
         ExecutorService executorCalc = Executors.newFixedThreadPool(8);
         ExecutorService executorPaint = Executors.newFixedThreadPool(8);
