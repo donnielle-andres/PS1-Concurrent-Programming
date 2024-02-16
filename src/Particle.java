@@ -84,7 +84,7 @@ public class Particle {
     
 
     private void handleHorizontalCollision() {
-        int buffer = 1; // A small buffer to prevent sticking to the wall
+        int buffer = 5; // A small buffer to prevent sticking to the wall
     
         if (position.x <= 0) {
             theta = 180 - theta;
