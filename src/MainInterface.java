@@ -18,6 +18,10 @@ public class MainInterface extends JFrame {
     private int WINDOW_WIDTH = 1560;
     private int WINDOW_HEIGHT = 700;
 
+    //FPS VARIABLES
+    private int frameCtr = 0;
+    private long lastFpsUpdateTime = System.nanoTime();
+
     //FRAMES
     private JPanel PARTICLE_FRAME;
     private JPanel INPUT_FRAME;
@@ -103,6 +107,7 @@ public class MainInterface extends JFrame {
                 }
 
                 fps_label.setBounds(1180, 0, 100, 20);
+                updateFPS();
                 
             }
         };
@@ -658,22 +663,13 @@ public class MainInterface extends JFrame {
         ExecutorService executorPaint = Executors.newFixedThreadPool(8);
 
         executorCalc.execute(() -> {
-            int frames = 0;
-            long last_time = System.currentTimeMillis();
             while (true) {
-                frames++;
+
                 long startTime = System.nanoTime();
                 processParticles(Particle_Simulator.TIME_STEP); // Update particle physics
 
                 // Submit repaint task to the executor
                 executorPaint.execute(this::repaint); // Repaint the canvas
-
-                if (System.currentTimeMillis() - last_time >= 1000) {
-                    last_time += 1000;
-                    int finalFrames = frames;
-                    SwingUtilities.invokeLater(() -> fps_label.setText("FPS: " + finalFrames));
-                    frames = 0;
-                }
 
                 try {
                     long sleepTime = (Particle_Simulator.OPTIMAL_TIME - (System.nanoTime() - startTime)) / 1000000;
@@ -706,6 +702,18 @@ public class MainInterface extends JFrame {
         Particle particle;
         while ((particle = particleQueue.poll()) != null) { // Poll particles from the queue until empty
             particle.draw(g);
+        }
+    }
+
+    private void updateFPS() {
+        long currentTime = System.nanoTime();
+        frameCtr++;
+        if ((currentTime - lastFpsUpdateTime) >= 500_000_000L) {
+            double elapsedTimeInSeconds = (currentTime - lastFpsUpdateTime) / 1_000_000_000.0;
+            double fps = frameCtr / elapsedTimeInSeconds;
+            fps_label.setText(String.format("FPS: %.0f", fps));
+            frameCtr = 0;
+            lastFpsUpdateTime = currentTime;
         }
     }
 
