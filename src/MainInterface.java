@@ -171,22 +171,22 @@ public class MainInterface extends JFrame {
 
         // WALL
         JPanel wallSpec = new JPanel(new GridLayout(0, 2, 2, 2));
-            X_startwall_label= new JLabel("Wall Start Point X:");
+            X_startwall_label= new JLabel("Wall Start Point X (Max: 1280):");
             X_startwall = new JTextField(20);
             wallSpec.add(X_startwall_label);
             wallSpec.add(X_startwall);
 
-            Y_startwall_label= new JLabel("Wall Start Point Y:");
+            Y_startwall_label= new JLabel("Wall Start Point Y (Max: 720):");
             Y_startwall = new JTextField(20);
             wallSpec.add(Y_startwall_label);
             wallSpec.add(Y_startwall);
 
-            X_endwall_label= new JLabel("Wall End Point X:");
+            X_endwall_label= new JLabel("Wall End Point X (Max: 1280):");
             X_endwall = new JTextField(20);
             wallSpec.add(X_endwall_label);
             wallSpec.add(X_endwall);
 
-            Y_endwall_label= new JLabel("Wall End Point Y:");
+            Y_endwall_label= new JLabel("Wall End Point Y (Max: 720):");
             Y_endwall = new JTextField(20);
             wallSpec.add(Y_endwall_label);
             wallSpec.add(Y_endwall);
@@ -288,7 +288,7 @@ public class MainInterface extends JFrame {
         tabPanel.add(startPoint_label, gbcTab);
         gbcTab.gridy++;
     
-        Xsp_label = new JLabel("X:");
+        Xsp_label = new JLabel("X (Max: 1280):");
         JTextField X_sp = new JTextField(10);
         tabPanel.add(Xsp_label, gbcTab);
         gbcTab.gridx = 1;
@@ -296,7 +296,7 @@ public class MainInterface extends JFrame {
         gbcTab.gridx = 0;
         gbcTab.gridy++;
     
-        Ysp_label = new JLabel("Y:");
+        Ysp_label = new JLabel("Y (Max: 720):");
         JTextField Y_sp = new JTextField(10);
         tabPanel.add(Ysp_label, gbcTab);
         gbcTab.gridx = 1;
@@ -309,7 +309,7 @@ public class MainInterface extends JFrame {
         tabPanel.add(endPoint_label, gbcTab);
         gbcTab.gridy++;
     
-        Xep_label = new JLabel("X:");
+        Xep_label = new JLabel("X (Max: 1280):");
         JTextField X_ep = new JTextField(10);
         tabPanel.add(Xep_label, gbcTab);
         gbcTab.gridx = 1;
@@ -317,7 +317,7 @@ public class MainInterface extends JFrame {
         gbcTab.gridx = 0;
         gbcTab.gridy++;
     
-        Yep_label = new JLabel("Y:");
+        Yep_label = new JLabel("Y (Max: 720):");
         JTextField Y_ep = new JTextField(10);
         tabPanel.add(Yep_label, gbcTab);
         gbcTab.gridx = 1;
@@ -346,7 +346,7 @@ public class MainInterface extends JFrame {
         // Add Button
         gbcTab.gridx = 0;
         gbcTab.gridwidth = 2;
-        addSpec1 = new JButton("Specs 1");
+        addSpec1 = new JButton("Add Points");
         tabPanel.add(addSpec1, gbcTab);
     
         // Adjust the size of the tabPanel to fit its content
@@ -420,7 +420,7 @@ public class MainInterface extends JFrame {
         tabPanel.add(particle_label, gbcTab);
         gbcTab.gridy++;
     
-        x_label = new JLabel("X:");
+        x_label = new JLabel("X (Max: 1280):");
         JTextField x_particle= new JTextField(10);
         tabPanel.add(x_label, gbcTab);
         gbcTab.gridx = 1;
@@ -428,7 +428,7 @@ public class MainInterface extends JFrame {
         gbcTab.gridx = 0;
         gbcTab.gridy++;
     
-        y_label = new JLabel("Y:");
+        y_label = new JLabel("Y (Max: 720):");
         JTextField y_particle = new JTextField(10);
         tabPanel.add(y_label, gbcTab);
         gbcTab.gridx = 1;
@@ -466,7 +466,7 @@ public class MainInterface extends JFrame {
         // Add Button
         gbcTab.gridx = 0;
         gbcTab.gridwidth = 2;
-        addSpec2 = new JButton("Specs 2");
+        addSpec2 = new JButton("Add Angles");
         tabPanel.add(addSpec2, gbcTab);
     
         // Adjust the size of the tabPanel to fit its content
@@ -539,7 +539,7 @@ public class MainInterface extends JFrame {
         tabPanel.add(particle_label, gbcTab);
         gbcTab.gridy++;
     
-        x_label = new JLabel("X:");
+        x_label = new JLabel(" (Max: 1280):");
         JTextField x_particle= new JTextField(10);
         tabPanel.add(x_label, gbcTab);
         gbcTab.gridx = 1;
@@ -547,7 +547,7 @@ public class MainInterface extends JFrame {
         gbcTab.gridx = 0;
         gbcTab.gridy++;
     
-        y_label = new JLabel("Y:");
+        y_label = new JLabel("Y (Max: 720):");
         JTextField y_particle = new JTextField(10);
         tabPanel.add(y_label, gbcTab);
         gbcTab.gridx = 1;
@@ -585,7 +585,7 @@ public class MainInterface extends JFrame {
         // Add Button
         gbcTab.gridx = 0;
         gbcTab.gridwidth = 2;
-        addSpec3 = new JButton("Specs 3");
+        addSpec3 = new JButton("Add Velocities");
         tabPanel.add(addSpec3, gbcTab);
     
         // Adjust the size of the tabPanel to fit its content
