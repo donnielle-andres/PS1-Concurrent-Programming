@@ -387,7 +387,7 @@ public class MainInterface extends JFrame {
                     double ratio = (double) i / (num_part - 1);
                     int x = sp_X + (int) ((ep_X - sp_X) * ratio);
                     int y = sp_Y + (int) ((ep_Y - sp_Y) * ratio);
-                    Particle newParticle = (new Particle(x, y, theta_val, velo_val));
+                    Particle newParticle = (new Particle(x, y, velo_val, theta_val));
                     particleList.add(newParticle);
                     PARTICLE_FRAME.repaint();
                 }
