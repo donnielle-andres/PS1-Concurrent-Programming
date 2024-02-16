@@ -74,7 +74,6 @@ public class MainInterface extends JFrame {
                 super.paintComponent(g);
 
                 int numThreads = Runtime.getRuntime().availableProcessors(); // Get number of available processors
-
                 ConcurrentLinkedQueue<Particle> particleQueue = new ConcurrentLinkedQueue<>(particleList); // Create a concurrent queue
 
                 // Create and start rendering threads
@@ -668,7 +667,7 @@ public class MainInterface extends JFrame {
     }
 
 
-    private void processParticles(double deltaTime) {
+    private void processParticles(double moveTime) {
         // Make a defensive copy of particleList
         ArrayList<Particle> particlesCopy;
         synchronized (particleList) {
@@ -677,7 +676,7 @@ public class MainInterface extends JFrame {
 
         // Process the particles in parallel
         taskThread.submit(() -> particlesCopy.parallelStream().forEach(particle -> {
-            particle.updatePosition(deltaTime);
+            particle.updatePosition(moveTime);
             particle.partCollision(wallList);
         })).join();
     }
