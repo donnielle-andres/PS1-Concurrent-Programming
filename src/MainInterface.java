@@ -501,7 +501,7 @@ public class MainInterface extends JFrame {
                     throw new IllegalArgumentException("Number of particles must be positive!");
                 }
         
-                double angleIncrement = (theta_end - theta_start) / (num_part - 1);
+                double angleIncrement = (theta_end - theta_start) / (num_part-1);
         
                 for (int i = 0; i < num_part; i++) {
                     double theta_final = theta_start + (angleIncrement * i);
@@ -644,32 +644,7 @@ public class MainInterface extends JFrame {
     
         return tabPanel;
     }
-    
 
-// MAS BETTER ATA IF NASA PARTICLE_SIMULATOR TOH 
-    private void fpsCounter() {
-        int frames = 0;
-        long last_time = System.currentTimeMillis();
-
-        while (true) {
-            frames++;
-
-            if (System.currentTimeMillis() - last_time >= 1000) {
-                last_time += 1000;
-                int finalFrames = frames;
-                SwingUtilities.invokeLater(() -> fps_label.setText("FPS: " + finalFrames));
-                frames = 0;
-            }
-
-            try {
-                Thread.sleep(2);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    //
     public void addParticle(Particle particle) {
         particleList.add(particle);
     }
@@ -679,15 +654,20 @@ public class MainInterface extends JFrame {
     }
 
     public void runSimulation() {
+        ExecutorService executorCalc = Executors.newFixedThreadPool(8);
+        ExecutorService executorPaint = Executors.newFixedThreadPool(8);
 
-        new Thread(() -> {
+        executorCalc.execute(() -> {
             int frames = 0;
             long last_time = System.currentTimeMillis();
             while (true) {
                 frames++;
                 long startTime = System.nanoTime();
                 processParticles(Particle_Simulator.TIME_STEP); // Update particle physics
-                SwingUtilities.invokeLater(this::repaint); // Repaint the canvas
+
+                // Submit repaint task to the executor
+                executorPaint.execute(this::repaint); // Repaint the canvas
+
                 if (System.currentTimeMillis() - last_time >= 1000) {
                     last_time += 1000;
                     int finalFrames = frames;
@@ -704,12 +684,19 @@ public class MainInterface extends JFrame {
                     Thread.currentThread().interrupt();
                 }
             }
-        }).start();
+        });
     }
-    
+
 
     private void processParticles(double deltaTime) {
-        taskThread.submit(() -> particleList.parallelStream().forEach(particle -> {
+        // Make a defensive copy of particleList
+        ArrayList<Particle> particlesCopy;
+        synchronized (particleList) {
+            particlesCopy = new ArrayList<>(particleList);
+        }
+
+        // Process the particles in parallel
+        taskThread.submit(() -> particlesCopy.parallelStream().forEach(particle -> {
             particle.updatePosition(deltaTime);
             particle.partCollision(wallList);
         })).join();
