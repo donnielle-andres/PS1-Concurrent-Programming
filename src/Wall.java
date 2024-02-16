@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.awt.geom.*;
 
 public class Wall{
     private int X_sw, Y_sw, X_ew, Y_ew;

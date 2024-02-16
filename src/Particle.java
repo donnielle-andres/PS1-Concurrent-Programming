@@ -1,6 +1,5 @@
 import java.awt.*;
 import java.util.*;
-import java.util.concurrent.*;
 
 public class Particle {
     private static final int particleSize = 10, PARTFRAME_WIDTH = 1280, PARTFRAME_HEIGHT = 720;
@@ -22,7 +21,7 @@ public class Particle {
         this.velocity = velocity;
         this.color = Color.WHITE;
 
-        System.out.printf("Particle Class: %d , %d , %f , %f ", x_part, y_part, velocity, theta);
+        //System.out.printf("Particle Class: %d , %d , %f , %f ", x_part, y_part, velocity, theta);
 
     }
 
@@ -30,7 +29,7 @@ public class Particle {
         int y_part = PARTFRAME_HEIGHT - position.y - particleSize;
         graphics.setColor(color);
         graphics.fillOval(position.x, y_part, particleSize, particleSize);
-        System.out.printf("\n Particle Position: %d , %d ", position.x, y_part);
+        //System.out.printf("\n Particle Position: %d , %d ", position.x, y_part);
     }
 
 // Update Particle Position
@@ -84,7 +83,7 @@ public class Particle {
         
         // Normalize angle
         normalizeAngle();
-        System.out.printf("\n Particle partCollision: %d , %d ", position.x, position.y);
+        //System.out.printf("\n Particle partCollision: %d , %d ", position.x, position.y);
     }
     
 

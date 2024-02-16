@@ -1,8 +1,5 @@
 import javax.swing.*;
-import javax.swing.border.Border;
-
 import java.awt.*;
-import java.nio.file.DirectoryNotEmptyException;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -708,13 +705,19 @@ public class MainInterface extends JFrame {
     private void updateFPS() {
         long currentTime = System.nanoTime();
         frameCtr++;
-        if ((currentTime - lastFpsUpdateTime) >= 500_000_000L) {
-            double elapsedTimeInSeconds = (currentTime - lastFpsUpdateTime) / 1_000_000_000.0;
+        
+        // Calculate elapsed time since last FPS update
+        long elapsedTime = currentTime - lastFpsUpdateTime;
+        
+        // Update FPS if elapsed time is greater than or equal to 500 milliseconds
+        if (elapsedTime >= 500_000_000L) {
+            double elapsedTimeInSeconds = elapsedTime / 1_000_000_000.0;
             double fps = frameCtr / elapsedTimeInSeconds;
             fps_label.setText(String.format("FPS: %.0f", fps));
             frameCtr = 0;
             lastFpsUpdateTime = currentTime;
         }
     }
+    
 
 }
