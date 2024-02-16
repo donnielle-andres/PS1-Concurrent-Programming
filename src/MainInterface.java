@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.border.Border;
+
 import java.awt.*;
 import java.nio.file.DirectoryNotEmptyException;
 import java.util.*;
@@ -13,8 +15,8 @@ public class MainInterface extends JFrame {
     private final ForkJoinPool renderThread = new ForkJoinPool();
 
     //WINDOW SIZE
-    private int WINDOW_WIDTH = 1580;
-    private int WINDOW_HEIGHT = 760;
+    private int WINDOW_WIDTH = 1560;
+    private int WINDOW_HEIGHT = 700;
 
     //FRAMES
     private JPanel PARTICLE_FRAME;
@@ -64,11 +66,10 @@ public class MainInterface extends JFrame {
     
 
     public MainInterface(){
-        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setTitle("STDISCM PARTICLE SIMULATOR");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
-        setResizable(true);
+        setResizable(false);
 
         // PARTICLE FRAME
         PARTICLE_FRAME = new JPanel(){
@@ -108,36 +109,31 @@ public class MainInterface extends JFrame {
 
         PARTICLE_FRAME.setPreferredSize(new Dimension(PARTFRAME_WIDTH, PARTFRAME_HEIGHT));
         PARTICLE_FRAME.setBackground(Color.BLACK);
-        add(PARTICLE_FRAME, BorderLayout.CENTER);
+        PARTICLE_FRAME.setBorder(BorderFactory.createLineBorder(Color.BLUE));
 
         // FPS LABEL
         fps_label = new JLabel("FPS: 0");
-        fps_label.setForeground(Color.WHITE); 
+        fps_label.setForeground(Color.WHITE);
         fps_label.setHorizontalAlignment(SwingConstants.LEFT);
-        PARTICLE_FRAME.setLayout(null); 
-        PARTICLE_FRAME.add(fps_label);
+        PARTICLE_FRAME.add(fps_label); // Add the label to the particle frame
 
         // INPUT FRAME
         INPUT_FRAME = new JPanel(new BorderLayout());
-        INPUT_FRAME.setPreferredSize(new Dimension(280, 720));
+        INPUT_FRAME.setPreferredSize(new Dimension(280, PARTFRAME_HEIGHT)); // Set height to match PARTICLE_FRAME
         INPUT_FRAME.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createTitledBorder("PARTICLE SPECIFICATIONS"), 
-            BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+                BorderFactory.createTitledBorder("PARTICLE SPECIFICATIONS"),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
         
 
         // INPUTS FOR INITIAL SPECS
-        JPanel particlePanel = new JPanel(new BorderLayout());
-        particlePanel.setPreferredSize(new Dimension(280, 200));
-        particlePanel.setBorder(BorderFactory.createTitledBorder("PARTICLES"));
-
         JPanel initialSpec = new JPanel(new GridLayout(0, 2, 2, 2));
-        JLabel x_label = new JLabel("X:");
+        JLabel x_label = new JLabel("X (Max: 1280):");
         JTextField x_particle = new JTextField(20);
             initialSpec.add(x_label);
             initialSpec.add(x_particle);
 
-            y_label = new JLabel("Y:");
+            y_label = new JLabel("Y (Max: 720):");
             JTextField y_particle = new JTextField(20);
             initialSpec.add(y_label);
             initialSpec.add(y_particle);
@@ -147,7 +143,7 @@ public class MainInterface extends JFrame {
             initialSpec.add(vel_label);
             initialSpec.add(velocity);
 
-            theta_label = new JLabel("Theta:");
+            theta_label = new JLabel("Theta (Max: 360):");
             JTextField theta = new JTextField(20);
             initialSpec.add(theta_label);
             initialSpec.add(theta);
@@ -160,7 +156,7 @@ public class MainInterface extends JFrame {
 
         // SPECS 1-3 TABS
             JTabbedPane tabbedPane = new JTabbedPane();
-            tabbedPane.setSize(300, 250);
+            //tabbedPane.setSize(280, 250);
 
             // Create tab panels
             JPanel specsTab1 = onespecsTab();
@@ -178,9 +174,6 @@ public class MainInterface extends JFrame {
 
 
         // WALL
-        JPanel wallPanel = new JPanel(new BorderLayout());
-        wallPanel.setBorder(BorderFactory.createTitledBorder("WALL"));
-
         JPanel wallSpec = new JPanel(new GridLayout(0, 2, 2, 2));
             X_startwall_label= new JLabel("Wall Start Point X:");
             X_startwall = new JTextField(20);
@@ -208,7 +201,12 @@ public class MainInterface extends JFrame {
 
             INPUT_FRAME.add(wallSpec, BorderLayout.SOUTH);
 
+        // Add components to JFrame
+        add(PARTICLE_FRAME, BorderLayout.CENTER);
         add(INPUT_FRAME, BorderLayout.EAST);
+
+        pack(); // Resize frame to fit components
+        setLocationRelativeTo(null); // Center the frame on the screen
         setVisible(true);
 
 
@@ -221,7 +219,7 @@ public class MainInterface extends JFrame {
                     double theta_val = Double.parseDouble(theta.getText());
             
                     // Check canvas boundaries
-                    if (x_part < 0 || x_part >= PARTFRAME_WIDTH || y_part < 0 || y_part >= PARTFRAME_HEIGHT) {
+                    if (x_part < 0 || x_part > PARTFRAME_WIDTH || y_part < 0 || y_part > PARTFRAME_HEIGHT) {
                         throw new IllegalArgumentException("Particle position must be within canvas boundaries (1280x720)!");
                     }
             
@@ -251,8 +249,8 @@ public class MainInterface extends JFrame {
                     int ew_Y = Integer.parseInt(Y_endwall.getText());
             
                     // Check canvas boundaries
-                    if ((sw_X < 0 || sw_X >= PARTFRAME_WIDTH || sw_Y < 0 || sw_Y >= PARTFRAME_HEIGHT) ||
-                        (ew_X < 0 || ew_X >= PARTFRAME_WIDTH || ew_Y < 0 || ew_Y >= PARTFRAME_HEIGHT)) {
+                    if ((sw_X < 0 || sw_X > PARTFRAME_WIDTH || sw_Y < 0 || sw_Y > PARTFRAME_HEIGHT) ||
+                        (ew_X < 0 || ew_X > PARTFRAME_WIDTH || ew_Y < 0 || ew_Y > PARTFRAME_HEIGHT)) {
                         throw new IllegalArgumentException("Wall coordinates must be within canvas boundaries (1280x720)!");
                     }
             
@@ -268,9 +266,6 @@ public class MainInterface extends JFrame {
                 }
             });
         
-
-            
-
 
     }
 
@@ -373,8 +368,8 @@ public class MainInterface extends JFrame {
                 double theta_val = Double.parseDouble(theta.getText());
         
                 // Check canvas boundaries for start and end points
-                if ((sp_X < 0 || sp_X >= PARTFRAME_WIDTH || sp_Y < 0 || sp_Y >= PARTFRAME_HEIGHT) ||
-                    (ep_X < 0 || ep_X >= PARTFRAME_WIDTH || ep_Y < 0 || ep_Y >= PARTFRAME_HEIGHT)) {
+                if ((sp_X < 0 || sp_X > PARTFRAME_WIDTH || sp_Y < 0 || sp_Y > PARTFRAME_HEIGHT) ||
+                    (ep_X < 0 || ep_X > PARTFRAME_WIDTH || ep_Y < 0 || ep_Y > PARTFRAME_HEIGHT)) {
                     throw new IllegalArgumentException("Start and end points must be within canvas boundaries (1280x720)!");
                 }
         

@@ -3,7 +3,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 public class Particle {
-    private static final int particleSize = 5, PARTFRAME_WIDTH = 1280, PARTFRAME_HEIGHT = 720;
+    private static final int particleSize = 10, PARTFRAME_WIDTH = 1280, PARTFRAME_HEIGHT = 720;
 
     public Point position;
 
@@ -27,7 +27,7 @@ public class Particle {
     }
 
     public void draw(Graphics graphics){
-        int y_part = PARTFRAME_HEIGHT - position.y - 40;
+        int y_part = PARTFRAME_HEIGHT - position.y - particleSize;
         graphics.setColor(color);
         graphics.fillOval(position.x, y_part, particleSize, particleSize);
         System.out.printf("\n Particle Position: %d , %d ", position.x, y_part);
@@ -87,42 +87,6 @@ public class Particle {
         System.out.printf("\n Particle partCollision: %d , %d ", position.x, position.y);
     }
     
-    /* public void partCollision(int PARTFRAME_WIDTH, int PARTFRAME_HEIGHT, ArrayList<Wall> walls) {
-        int buffer = 1; // A small buffer to prevent sticking to the wall
-
-        handleHorizontalCollision(PARTFRAME_WIDTH, particleSize, buffer);
-        handleVerticalCollision(PARTFRAME_HEIGHT, particleSize, buffer);
-
-        // Handle wall collisions
-        for (Wall wall : walls) {
-            if (wallCollision(wall)) {
-                checkParticleBounce(wall);
-            }
-        }
-        normalizeAngle();
-        System.out.printf("\n Particle partCollision: %d , %d ", position.x, position.y);
-    }
-
-    
-    private void handleHorizontalCollision(int PARTFRAME_WIDTH, int particleSize, int buffer) {
-        if (position.x <= 0) {
-            theta = 180 - theta;
-            position.x = buffer; // Move particle slightly inside to prevent sticking
-        } else if (position.x + particleSize >= PARTFRAME_WIDTH) {
-            theta = 180 - theta;
-            position.x = PARTFRAME_WIDTH - particleSize - buffer;
-        }
-    }
-
-    private void handleVerticalCollision(int PARTFRAME_HEIGHT, int particleSize, int buffer) {
-        if (position.y + particleSize >= PARTFRAME_HEIGHT) {
-            theta = -theta;
-            position.y = PARTFRAME_HEIGHT - particleSize - buffer;
-        } else if (position.y <= 0) {
-            theta = -theta;
-            position.y = buffer;
-        }
-    }*/
 
     private void handleHorizontalCollision() {
         int buffer = 1; // A small buffer to prevent sticking to the wall
