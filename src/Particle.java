@@ -10,8 +10,7 @@ public class Particle {
     double moveY = 0.0;
 
     public Particle(int x, int y, double velocity, double theta){
-        //this.x_part = x;
-        //this.y_part = y;
+
         this.position = new Point (x, y);
         this.theta = theta;
         this.velocity = velocity;
